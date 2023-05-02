@@ -4,23 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@color/color_background"
     tools:context="com.example.palliativecareapplication.MainScreenFragment">
 
-    <EditText
-        android:id="@+id/tv_search"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:background="@drawable/search_box_style"
-        android:hint="Search"
-        android:inputType="textPersonName"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:textColor="#2B2A2A"
-        android:textColorHint="@color/black_87"
-        android:textSize="20sp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/container_full_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="username"
+        android:hint="@string/search"
+        android:inputType="text"
+        android:textColorHint="@color/color_text_tertiary"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:helperText=""
+        app:helperTextTextColor="@color/color_warning"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/ic_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_background"
+            android:maxLength="20" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -32,35 +44,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_search"
-        tools:ignore="DuplicateIds"
+        app:layout_constraintTop_toBottomOf="@+id/container_full_name"
 
-        />
+        tools:ignore="DuplicateIds" />
 
-        <ImageButton
-            android:id="@+id/btnAdd"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/btn_add"
-            android:src="@drawable/ic_add"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <ImageButton
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="1dp"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/btn_search"
-            android:padding="10dp"
-            android:src="@drawable/ic_search"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_search"
-            app:layout_constraintEnd_toEndOf="@+id/tv_search"
-            app:layout_constraintTop_toTopOf="@+id/tv_search" />
+    <ImageButton
+        android:id="@+id/btnAdd"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/btn_add"
+        android:src="@drawable/ic_add"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
