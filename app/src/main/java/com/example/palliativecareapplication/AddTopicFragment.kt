@@ -1,59 +1,149 @@
 package com.example.palliativecareapplication
 
+import android.app.ProgressDialog
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.palliativecareapplication.databinding.FragmentAddTopicBinding
+import com.example.palliativecareapplication.model.FirebaseNames
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AddTopicFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AddTopicFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    lateinit var db: FirebaseFirestore
+    private lateinit var binding: FragmentAddTopicBinding
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_topic, container, false)
+        binding = FragmentAddTopicBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AddTopicFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AddTopicFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        db = Firebase.firestore
+
+
+        val storage = Firebase.storage
+        val storageRef = storage.reference
+        val imageRef = storageRef.child("images")
+
+        binding.imgTopic.setOnClickListener {
+            getContent.launch("image/*")
+        }
+
+        binding.buttonAddTopic.setOnClickListener {
+            val title = binding.textInputTitle.text.toString()
+            val description = binding.textInputDescription.text.toString()
+            val doctorName = binding.textInputDoctorName.text.toString()
+
+            if (title.isNotEmpty() && description.isNotEmpty() &&
+                doctorName.isNotEmpty()
+            ) {
+                showDialog("Adding topic...")
+                // Get the data from an ImageView as bytes
+                val data = getImageData()
+                uploadImageAndTopic(imageRef, data, title, description, doctorName)
+
+            } else {
+                Toast.makeText(requireContext(), "Please fill the data", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }//end onCreatedView
+
+
+    private val getContent =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            binding.imgTopic.setImageURI(uri)
+        }
+
+
+    private fun showDialog(msg: String) {
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog!!.setMessage(msg)
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.show()
+    }
+
+
+    private fun hideDialog() {
+        if (progressDialog!!.isShowing)
+            progressDialog!!.dismiss()
+    }
+
+
+    private fun getImageData(): ByteArray {
+        val bitmap = (binding.imgTopic.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+        return data
+    }
+
+
+    private fun uploadImageAndTopic(
+        imageRef: StorageReference,
+        data: ByteArray,
+        title: String,
+        description: String,
+        doctorName: String
+    ) {
+        val childRef = imageRef.child(System.currentTimeMillis().toString() + "_images.png")
+        var uploadTask = childRef.putBytes(data)
+        uploadTask.addOnFailureListener { exception ->
+            Log.e("hzm", exception.message!!)
+            hideDialog()
+        }.addOnSuccessListener {
+            Log.e("hzm", "Image Uploaded Successfully")
+            childRef.downloadUrl.addOnSuccessListener { uri ->
+                addTopic(
+                    title,
+                    description,
+                    doctorName,
+                    uri!!.toString(),
+                )
+            }
+        }
+    }
+
+
+    private fun addTopic(
+        title: String, description: String, doctorName: String, image: String
+    ) {
+        val topic = hashMapOf(
+            "title" to title,
+            "description" to description,
+            "doctorName" to doctorName,
+            "image" to image
+        )
+        db.collection(FirebaseNames.COLLECTION_TOPICS)
+            .add(topic)
+            .addOnSuccessListener {
+                Log.e("TAG", "Added Successfully")
+                hideDialog()
+                MainActivity.swipeFragment(requireActivity(),MainScreenFragment())
+            }
+            .addOnFailureListener {
+                Log.e("TAG", it.message.toString())
             }
     }
+
 }
