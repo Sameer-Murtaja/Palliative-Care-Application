@@ -8,7 +8,7 @@
     tools:context="com.example.palliativecareapplication.MainScreenFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/container_full_name"
+        android:id="@+id/container_search"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         app:startIconDrawable="@drawable/ic_search">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_full_name"
+            android:id="@+id/text_input_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/card_background"
@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_full_name"
+        app:layout_constraintTop_toBottomOf="@+id/container_search"
 
         tools:ignore="DuplicateIds" />
 
