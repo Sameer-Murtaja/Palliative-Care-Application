@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#eee"
+    android:background="@color/color_background"
 
     >
 
@@ -33,18 +33,18 @@
             >
 
             <TextView
-                android:id="@+id/tv_name"
+                android:id="@+id/tv_title"
                 style="@style/TextStyle.Title.Large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:text="Title"
-                app:layout_constraintStart_toEndOf="@+id/img_product"
+                app:layout_constraintStart_toEndOf="@+id/img_topic"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_price"
+                android:id="@+id/tv_doctor_name"
                 style="@style/TextStyle.Body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,11 +53,11 @@
                 android:paddingBottom="10dp"
                 android:text="doctor_name"
 
-                app:layout_constraintStart_toEndOf="@+id/img_product"
-                app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+                app:layout_constraintStart_toEndOf="@+id/img_topic"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
             <ImageView
-                android:id="@+id/img_product"
+                android:id="@+id/img_topic"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
@@ -73,8 +73,8 @@
                 android:layout_marginEnd="@dimen/spacing_normal"
                 android:background="#00000000"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_product"
-                app:layout_constraintTop_toTopOf="@+id/img_product"
+                app:layout_constraintTop_toBottomOf="@+id/img_topic"
+                app:layout_constraintTop_toTopOf="@+id/img_topic"
                 app:srcCompat="@drawable/ic_delete" />
 
 
