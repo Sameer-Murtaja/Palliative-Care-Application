@@ -7,7 +7,11 @@ import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palliativecareapplication.MainActivity
+import com.example.palliativecareapplication.MainScreenFragment
+import com.example.palliativecareapplication.TopicDetailsFragment
 import com.example.palliativecareapplication.databinding.CardTopicBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
@@ -45,10 +49,10 @@ class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapte
         }
 
 
-//        holder.cardViewBinding.root.setOnClickListener {
-//            ShowProductDetails.productData = data[position]
-//            context.startActivity(Intent(context,ShowProductDetails::class.java))
-//        }
+        holder.cardViewBinding.root.setOnClickListener {
+            TopicDetailsFragment.topicData = data[position]
+            MainActivity.swipeFragment(context as FragmentActivity,TopicDetailsFragment())
+        }
 
     }
 

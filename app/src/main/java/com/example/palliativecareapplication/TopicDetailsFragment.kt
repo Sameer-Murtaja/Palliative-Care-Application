@@ -12,26 +12,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.palliativecareapplication.databinding.FragmentAddTopicBinding
+import com.example.palliativecareapplication.databinding.FragmentTopicDetailsBinding
 import com.example.palliativecareapplication.model.FirebaseNames
+import com.example.palliativecareapplication.model.Topic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
+import java.time.Duration
 
-class AddTopicFragment : Fragment() {
+class TopicDetailsFragment : Fragment() {
 
     lateinit var db: FirebaseFirestore
-    private lateinit var binding: FragmentAddTopicBinding
+    lateinit var binding: FragmentTopicDetailsBinding
     private var progressDialog: ProgressDialog? = null
 
+    companion object {
+        var topicData: Topic? = null
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAddTopicBinding.inflate(inflater, container, false)
+        binding = FragmentTopicDetailsBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -41,16 +47,25 @@ class AddTopicFragment : Fragment() {
 
         db = Firebase.firestore
 
+        if (topicData == null) {
+            return
+        }
+            Picasso.get().load(topicData!!.image).into(binding.imgTopic)
+            binding.textInputTitle.setText(topicData!!.title)
+            binding.textInputDescription.setText(topicData!!.description)
+            binding.textInputDoctorName.setText(topicData!!.doctorName)
+
+        binding.appbar.setNavigationOnClickListener {
+            MainActivity.swipeFragment(requireActivity(),MainScreenFragment());
+        }
 
         val storage = Firebase.storage
         val storageRef = storage.reference
         val imageRef = storageRef.child("images")
 
-        binding.imgTopic.setOnClickListener {
-            getContent.launch("image/*")
-        }
+        binding.buttonEdit.setOnClickListener {
 
-        binding.buttonAddTopic.setOnClickListener {
+            val id = topicData!!.id
             val title = binding.textInputTitle.text.toString()
             val description = binding.textInputDescription.text.toString()
             val doctorName = binding.textInputDoctorName.text.toString()
@@ -58,16 +73,18 @@ class AddTopicFragment : Fragment() {
             if (title.isNotEmpty() && description.isNotEmpty() &&
                 doctorName.isNotEmpty()
             ) {
-                showDialog("Adding topic...")
+                showDialog("saving...")
                 // Get the data from an ImageView as bytes
                 val data = getImageData()
-                uploadImageAndTopic(imageRef, data, title, description, doctorName)
 
+                updateImageAndTopic(imageRef, data, id, title, description, doctorName)
             } else {
                 Toast.makeText(requireContext(), "Please fill the data", Toast.LENGTH_SHORT).show()
             }
+
         }
-    }//end onCreatedView
+
+    }
 
 
     private val getContent =
@@ -99,9 +116,10 @@ class AddTopicFragment : Fragment() {
     }
 
 
-    private fun uploadImageAndTopic(
+    private fun updateImageAndTopic(
         imageRef: StorageReference,
         data: ByteArray,
+        id: String,
         title: String,
         description: String,
         doctorName: String
@@ -114,7 +132,8 @@ class AddTopicFragment : Fragment() {
         }.addOnSuccessListener {
             Log.e("hzm", "Image Uploaded Successfully")
             childRef.downloadUrl.addOnSuccessListener { uri ->
-                addTopic(
+                updateTopic(
+                    id,
                     title,
                     description,
                     doctorName,
@@ -125,8 +144,8 @@ class AddTopicFragment : Fragment() {
     }
 
 
-    private fun addTopic(
-        title: String, description: String, doctorName: String, image: String
+    private fun updateTopic(
+        id: String, title: String, description: String, doctorName: String, image: String
     ) {
         val topic = hashMapOf(
             "title" to title,
@@ -134,12 +153,11 @@ class AddTopicFragment : Fragment() {
             "doctorName" to doctorName,
             "image" to image
         )
-        db.collection(FirebaseNames.COLLECTION_TOPICS)
-            .add(topic)
-            .addOnSuccessListener {
-                Log.e("TAG", "Added Successfully")
-                Toast.makeText(requireContext(), "Added Successfully", Toast.LENGTH_SHORT).show()
 
+        db.collection(FirebaseNames.COLLECTION_TOPICS).document(id).update(topic as Map<String, Any>)
+            .addOnSuccessListener {
+                Log.e("TAG", "Saved")
+                Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
                 hideDialog()
                 MainActivity.swipeFragment(requireActivity(),MainScreenFragment())
             }
