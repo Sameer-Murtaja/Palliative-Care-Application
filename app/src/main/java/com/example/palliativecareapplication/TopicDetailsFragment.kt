@@ -24,15 +24,12 @@ import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
 import java.time.Duration
 
-class TopicDetailsFragment : Fragment() {
+class TopicDetailsFragment(var topicData: Topic) : Fragment() {
 
     lateinit var db: FirebaseFirestore
     lateinit var binding: FragmentTopicDetailsBinding
     private var progressDialog: ProgressDialog? = null
 
-    companion object {
-        var topicData: Topic? = null
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,25 +44,53 @@ class TopicDetailsFragment : Fragment() {
 
         db = Firebase.firestore
 
-        if (topicData == null) {
-            return
-        }
-            Picasso.get().load(topicData!!.image).into(binding.imgTopic)
-            binding.textInputTitle.setText(topicData!!.title)
-            binding.textInputDescription.setText(topicData!!.description)
-            binding.textInputDoctorName.setText(topicData!!.doctorName)
+        setTopicDataToUI()
 
+        returnToMainOnAppBarButtonClick()
+
+        selectImageOnClick()
+
+        saveEditionOnButtonClick()
+
+        binding.buttonViewPosts.setOnClickListener {
+            MainActivity.swipeFragment(requireActivity(),ViewPostsFragment(topicData))
+        }
+
+    }
+
+
+    private fun setTopicDataToUI() {
+        Picasso.get().load(topicData.image).into(binding.imgTopic)
+        binding.textInputTitle.setText(topicData.title)
+        binding.textInputDescription.setText(topicData.description)
+        binding.textInputDoctorName.setText(topicData.doctorName)
+    }
+
+    private fun returnToMainOnAppBarButtonClick() {
         binding.appbar.setNavigationOnClickListener {
-            MainActivity.swipeFragment(requireActivity(),MainScreenFragment());
+            MainActivity.swipeFragment(requireActivity(), MainScreenFragment());
+        }
+    }
+
+    private fun selectImageOnClick() {
+        binding.imgTopic.setOnClickListener {
+            getContent.launch("image/*")
+        }
+    }
+
+    private val getContent =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            binding.imgTopic.setImageURI(uri)
         }
 
+    private fun saveEditionOnButtonClick() {
         val storage = Firebase.storage
         val storageRef = storage.reference
         val imageRef = storageRef.child("images")
 
-        binding.buttonEdit.setOnClickListener {
+        binding.buttonSaveEdit.setOnClickListener {
 
-            val id = topicData!!.id
+            val id = topicData.id
             val title = binding.textInputTitle.text.toString()
             val description = binding.textInputDescription.text.toString()
             val doctorName = binding.textInputDoctorName.text.toString()
@@ -83,15 +108,7 @@ class TopicDetailsFragment : Fragment() {
             }
 
         }
-
     }
-
-
-    private val getContent =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            binding.imgTopic.setImageURI(uri)
-        }
-
 
     private fun showDialog(msg: String) {
         progressDialog = ProgressDialog(requireContext())
@@ -154,12 +171,13 @@ class TopicDetailsFragment : Fragment() {
             "image" to image
         )
 
-        db.collection(FirebaseNames.COLLECTION_TOPICS).document(id).update(topic as Map<String, Any>)
+        db.collection(FirebaseNames.COLLECTION_TOPICS).document(id)
+            .update(topic as Map<String, Any>)
             .addOnSuccessListener {
                 Log.e("TAG", "Saved")
                 Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
                 hideDialog()
-                MainActivity.swipeFragment(requireActivity(),MainScreenFragment())
+                MainActivity.swipeFragment(requireActivity(), MainScreenFragment())
             }
             .addOnFailureListener {
                 Log.e("TAG", it.message.toString())

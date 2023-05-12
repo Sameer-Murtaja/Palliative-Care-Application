@@ -11,24 +11,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.palliativecareapplication.adapter.TopicAdapter
-import com.example.palliativecareapplication.databinding.FragmentMainScreenBinding
+import com.example.palliativecareapplication.adapter.PostAdapter
+import com.example.palliativecareapplication.databinding.FragmentViewPostsBinding
 import com.example.palliativecareapplication.model.FirebaseNames
+import com.example.palliativecareapplication.model.Post
 import com.example.palliativecareapplication.model.Topic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class MainScreenFragment : Fragment() {
+class ViewPostsFragment(var topic: Topic) : Fragment() {
     lateinit var db: FirebaseFirestore
 
-    lateinit var binding: FragmentMainScreenBinding
+    lateinit var binding: FragmentViewPostsBinding
     private var progressDialog: ProgressDialog? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMainScreenBinding.inflate(inflater, container, false)
+        binding = FragmentViewPostsBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -43,33 +44,33 @@ class MainScreenFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        showDialog("Loading topics");
-        val topicsArr = ArrayList<Topic>()
-        db.collection(FirebaseNames.COLLECTION_TOPICS)
-            .get()
+
+        showDialog("Loading posts");
+        val postsArr = ArrayList<Post>()
+        db.collection(FirebaseNames.COLLECTION_TOPICS).document(topic.id)
+            .collection(FirebaseNames.COLLECTION_POSTS).get()
             .addOnSuccessListener { querySnapshot ->
                 for (document in querySnapshot) {
                     val id = document.id
                     val title = document.getString("title")!!
-                    val description = document.getString("description")!!
-                    val doctorName = document.getString("doctorName")!!
-                    val image = document.getString("image")!!
-                    topicsArr.add(
-                        Topic(
+                    val details = document.getString("details")!!
+                    val attachments = document.get("attachments") as ArrayList<String>?
+                    postsArr.add(
+                        Post(
                             id,
                             title,
-                            description,
-                            doctorName,
-                            image
+                            details,
+                            attachments
                         )
                     )
                 }
-                val topicsAdapter = TopicAdapter(topicsArr)
-                binding.rvTopics.layoutManager = LinearLayoutManager(requireContext())
-                binding.rvTopics.adapter = topicsAdapter
+                    Log.e("TAG", "onResume: ${postsArr.size}", )
+                val postsAdapter = PostAdapter(postsArr,topic)
+                binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
+                binding.rvPosts.adapter = postsAdapter
                 hideDialog()
             }.addOnFailureListener { error ->
-                Log.e("hzm", error.message.toString())
+                Log.e("tag", error.message.toString())
                 hideDialog()
                 Toast.makeText(requireContext(), "Error while retrieving data", Toast.LENGTH_SHORT).show()
             }
@@ -77,7 +78,7 @@ class MainScreenFragment : Fragment() {
 
 
         binding.btnAdd.setOnClickListener {
-            MainActivity.swipeFragment(requireActivity(), AddTopicFragment())
+            MainActivity.swipeFragment(requireActivity(), AddPostFragment(topic))
         }
 
 
@@ -91,7 +92,7 @@ class MainScreenFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                (binding.rvTopics.adapter as TopicAdapter).search(s.toString())
+                (binding.rvPosts.adapter as PostAdapter).search(s.toString())
             }
 
         })

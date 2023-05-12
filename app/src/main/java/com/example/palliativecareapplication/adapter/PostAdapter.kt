@@ -9,47 +9,42 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.palliativecareapplication.MainActivity
-import com.example.palliativecareapplication.TopicDetailsFragment
-import com.example.palliativecareapplication.databinding.CardTopicBinding
+import com.example.palliativecareapplication.databinding.CardPostBinding
 import com.example.palliativecareapplication.model.FirebaseNames
+import com.example.palliativecareapplication.model.Post
 import com.example.palliativecareapplication.model.Topic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
-class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapter.MyViewHolder>() {
+class PostAdapter(var data: ArrayList<Post>,var topic: Topic): RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     lateinit var context: Context
     lateinit var db: FirebaseFirestore
     private var initialData = data
 
 
-    class MyViewHolder(val cardViewBinding: CardTopicBinding): RecyclerView.ViewHolder(cardViewBinding.root)
+    class MyViewHolder(val cardViewBinding: CardPostBinding): RecyclerView.ViewHolder(cardViewBinding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         context = parent.context
         db = Firebase.firestore
 
-        val binding : CardTopicBinding
-                = CardTopicBinding.inflate(LayoutInflater.from(context),parent,false)
+        val binding : CardPostBinding
+                = CardPostBinding.inflate(LayoutInflater.from(context),parent,false)
         return MyViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.cardViewBinding.apply {
             tvTitle.text = data[position].title
-            tvDoctorName.text = data[position].doctorName
-            Picasso.get().load(data[position].image).into(imgTopic);
+            tvDetails.text = data[position].details
         }
 
         holder.cardViewBinding.btnDelete.setOnClickListener {
             showDeleteAlert(position)
         }
 
-
-        holder.cardViewBinding.root.setOnClickListener {
-            MainActivity.swipeFragment(context as FragmentActivity,TopicDetailsFragment(data[position]))
-        }
 
     }
 
@@ -61,10 +56,10 @@ class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapte
 
     private fun showDeleteAlert(position: Int) {
         AlertDialog.Builder(context).apply {
-            setTitle("Delete topic")
-            setMessage("Are you sure that you want to delete this topic?")
+            setTitle("Delete Post")
+            setMessage("Are you sure that you want to delete this Post?")
             setPositiveButton("Yse") { _, _ ->
-                deleteTopicById(position)
+                deletePostById(position)
             }
             setCancelable(true)
             setNegativeButton("No") { dialogInterface: DialogInterface, _ ->
@@ -76,8 +71,9 @@ class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapte
     }
 
 
-    fun deleteTopicById(position: Int) {
-        db.collection(FirebaseNames.COLLECTION_TOPICS).document(data[position].id)
+    private fun deletePostById(position: Int) {
+        db.collection(FirebaseNames.COLLECTION_TOPICS)
+            .document(topic.id).collection(FirebaseNames.COLLECTION_POSTS).document(data[position].id)
             .delete()
             .addOnSuccessListener { _ ->
                 Log.e("TAG", "Deleted Successfully")
@@ -91,10 +87,10 @@ class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapte
 
 
     fun search(text : String){
-        val newArray = initialData.filter { topic ->
-            topic.title.contains(text) // || topic.doctorName.startsWith(text)
+        val newArray = initialData.filter { post ->
+            post.title.contains(text) // || post.doctorName.startsWith(text)
         }
-        data = newArray as ArrayList<Topic>
+        data = newArray as ArrayList<Post>
         notifyDataSetChanged()
     }
 
