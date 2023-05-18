@@ -54,13 +54,15 @@ class MainScreenFragment : Fragment() {
                     val description = document.getString("description")!!
                     val doctorName = document.getString("doctorName")!!
                     val image = document.getString("image")!!
+                    val usersFollowing = document.getDouble("usersFollowing")!!.toInt()
                     topicsArr.add(
                         Topic(
                             id,
                             title,
                             description,
                             doctorName,
-                            image
+                            image,
+                            usersFollowing
                         )
                     )
                 }

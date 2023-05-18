@@ -53,7 +53,7 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
         saveEditionOnButtonClick()
 
         binding.buttonViewPosts.setOnClickListener {
-            MainActivity.swipeFragment(requireActivity(),ViewPostsFragment(topicData))
+            MainActivity.addFragment(requireActivity(),ViewPostsFragment(topicData))
         }
 
     }

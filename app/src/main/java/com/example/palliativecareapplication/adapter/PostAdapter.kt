@@ -7,9 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.palliativecareapplication.MainActivity
 import com.example.palliativecareapplication.databinding.CardPostBinding
+import com.example.palliativecareapplication.databinding.FragmentViewPostsBinding
+import com.example.palliativecareapplication.model.Attachment
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Post
 import com.example.palliativecareapplication.model.Topic
@@ -18,20 +22,22 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
-class PostAdapter(var data: ArrayList<Post>,var topic: Topic): RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
+class PostAdapter(var data: ArrayList<Post>, var topic: Topic, var parentBinding: FragmentViewPostsBinding) :
+    RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     lateinit var context: Context
     lateinit var db: FirebaseFirestore
     private var initialData = data
 
 
-    class MyViewHolder(val cardViewBinding: CardPostBinding): RecyclerView.ViewHolder(cardViewBinding.root)
+    class MyViewHolder(val cardViewBinding: CardPostBinding) :
+        RecyclerView.ViewHolder(cardViewBinding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         context = parent.context
         db = Firebase.firestore
 
-        val binding : CardPostBinding
-                = CardPostBinding.inflate(LayoutInflater.from(context),parent,false)
+        val binding: CardPostBinding =
+            CardPostBinding.inflate(LayoutInflater.from(context), parent, false)
         return MyViewHolder(binding)
     }
 
@@ -39,6 +45,11 @@ class PostAdapter(var data: ArrayList<Post>,var topic: Topic): RecyclerView.Adap
         holder.cardViewBinding.apply {
             tvTitle.text = data[position].title
             tvDetails.text = data[position].details
+            if (data[position].attachments?.isNotEmpty() == true) {
+                val attachmentsAdapter = AttachmentAdapter(data[position].attachments!!,topic, parentBinding)
+                rvAttachments.layoutManager = GridLayoutManager(context, 2)
+                rvAttachments.adapter = attachmentsAdapter
+            }
         }
 
         holder.cardViewBinding.btnDelete.setOnClickListener {
@@ -51,7 +62,6 @@ class PostAdapter(var data: ArrayList<Post>,var topic: Topic): RecyclerView.Adap
     override fun getItemCount(): Int {
         return data.size
     }
-
 
 
     private fun showDeleteAlert(position: Int) {
@@ -73,7 +83,8 @@ class PostAdapter(var data: ArrayList<Post>,var topic: Topic): RecyclerView.Adap
 
     private fun deletePostById(position: Int) {
         db.collection(FirebaseNames.COLLECTION_TOPICS)
-            .document(topic.id).collection(FirebaseNames.COLLECTION_POSTS).document(data[position].id)
+            .document(topic.id).collection(FirebaseNames.COLLECTION_POSTS)
+            .document(data[position].id)
             .delete()
             .addOnSuccessListener { _ ->
                 Log.e("TAG", "Deleted Successfully")
@@ -86,7 +97,7 @@ class PostAdapter(var data: ArrayList<Post>,var topic: Topic): RecyclerView.Adap
     }
 
 
-    fun search(text : String){
+    fun search(text: String) {
         val newArray = initialData.filter { post ->
             post.title.contains(text) // || post.doctorName.startsWith(text)
         }

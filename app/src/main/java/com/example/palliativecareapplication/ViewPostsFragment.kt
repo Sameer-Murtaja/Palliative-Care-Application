@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.palliativecareapplication.adapter.PostAdapter
 import com.example.palliativecareapplication.databinding.FragmentViewPostsBinding
+import com.example.palliativecareapplication.model.Attachment
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Post
 import com.example.palliativecareapplication.model.Topic
@@ -54,7 +55,9 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
                     val id = document.id
                     val title = document.getString("title")!!
                     val details = document.getString("details")!!
-                    val attachments = document.get("attachments") as ArrayList<String>?
+                    val attachments = (document.get("attachments") as ArrayList<HashMap<String, *>>).map {
+                        Attachment.fromHashmap(it)
+                    }
                     postsArr.add(
                         Post(
                             id,
@@ -64,15 +67,15 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
                         )
                     )
                 }
-                    Log.e("TAG", "onResume: ${postsArr.size}", )
-                val postsAdapter = PostAdapter(postsArr,topic)
+                val postsAdapter = PostAdapter(postsArr, topic, binding)
                 binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
                 binding.rvPosts.adapter = postsAdapter
                 hideDialog()
             }.addOnFailureListener { error ->
                 Log.e("tag", error.message.toString())
                 hideDialog()
-                Toast.makeText(requireContext(), "Error while retrieving data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error while retrieving data", Toast.LENGTH_SHORT)
+                    .show()
             }
 
 
@@ -96,6 +99,14 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
             }
 
         })
+
+        binding.fullscreenLayout.setOnClickListener {
+            binding.fullscreenLayout.visibility = View.INVISIBLE
+        }
+
+        binding.appbar.setNavigationOnClickListener {
+            MainActivity.removeFragment(requireActivity(), this);
+        }
 
     }
 

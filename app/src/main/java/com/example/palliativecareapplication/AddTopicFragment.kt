@@ -132,7 +132,8 @@ class AddTopicFragment : Fragment() {
             "title" to title,
             "description" to description,
             "doctorName" to doctorName,
-            "image" to image
+            "image" to image,
+            "usersFollowing" to 0
         )
         db.collection(FirebaseNames.COLLECTION_TOPICS)
             .add(topic)
