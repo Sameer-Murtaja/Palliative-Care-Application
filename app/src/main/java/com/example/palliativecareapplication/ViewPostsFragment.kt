@@ -77,7 +77,7 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
         }
 
         binding.appbar.setNavigationOnClickListener {
-            MainActivity.removeFragment(requireActivity(), this);
+            MainActivity.swipeFragment(requireActivity(), TopicDetailsFragment(topic));
         }
 
     }

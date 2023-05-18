@@ -15,15 +15,15 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragmentContainerView, fragment).commit()
         }
 
-        fun addFragment(activity: FragmentActivity, fragment: Fragment) {
-            activity.supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainerView, fragment).commit()
-        }
-
-        fun removeFragment(activity: FragmentActivity, fragment: Fragment) {
-            activity.supportFragmentManager.beginTransaction()
-                .remove(fragment).commit()
-        }
+//        fun addFragment(activity: FragmentActivity, fragment: Fragment) {
+//            activity.supportFragmentManager.beginTransaction()
+//                .add(R.id.fragmentContainerView, fragment).commit()
+//        }
+//
+//        fun removeFragment(activity: FragmentActivity, fragment: Fragment) {
+//            activity.supportFragmentManager.beginTransaction()
+//                .remove(fragment).commit()
+//        }
 
     }
 

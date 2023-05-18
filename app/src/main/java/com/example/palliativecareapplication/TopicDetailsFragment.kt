@@ -204,7 +204,7 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
 
     private fun ViewTopicsOnClick() {
         binding.buttonViewPosts.setOnClickListener {
-            MainActivity.addFragment(requireActivity(), ViewPostsFragment(topicData))
+            MainActivity.swipeFragment(requireActivity(), ViewPostsFragment(topicData))
         }
     }
 
