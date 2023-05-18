@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +40,12 @@ class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapte
         holder.cardViewBinding.apply {
             tvTitle.text = data[position].title
             tvDoctorName.text = data[position].doctorName
-            Picasso.get().load(data[position].image).into(imgTopic);
+            tvFollowersCount.text = "${data[position].usersFollowing} متابعين"
+            Picasso.get().load(data[position].image).into(imgTopic)
+
+            if(MainActivity.isPatient){
+                tvFollowersCount.visibility = View.GONE
+            }
         }
 
         holder.cardViewBinding.btnDelete.setOnClickListener {

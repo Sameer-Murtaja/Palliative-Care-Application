@@ -40,16 +40,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_app_bar" />
 
+
     <ImageButton
-        android:id="@+id/btn_delete2"
+        android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_medium"
         android:layout_marginEnd="@dimen/spacing_medium"
-        android:background="#00000000"
+        android:background="#05000000"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/img_topic"
         app:layout_constraintTop_toTopOf="@+id/img_topic"
         app:srcCompat="@drawable/ic_delete" />
+
+    <ImageButton
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:background="#05000000"
+        app:layout_constraintEnd_toEndOf="@+id/img_topic"
+        app:layout_constraintTop_toTopOf="@+id/img_topic"
+        app:srcCompat="@drawable/ic_baseline_edit_24" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_title"
@@ -69,7 +82,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        android:clickable="false"
         app:layout_constraintTop_toBottomOf="@+id/img_topic">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -77,6 +89,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/card_background"
+            android:enabled="false"
+            android:textColorHint="@color/color_text_secondary"
             android:maxLength="20" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -99,13 +113,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        android:clickable="false"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:enabled="false"
             android:background="@drawable/card_background" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -128,13 +142,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        android:clickable="false"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_description">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_doctor_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:enabled="false"
             android:background="@drawable/card_background" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -149,8 +163,39 @@
         android:fontFamily="@font/montserrat_semibold"
         android:text="@string/edit"
         android:textAllCaps="false"
-        android:clickable="false"
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_title"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_doctor_name"
+        tools:layout_editor_absoluteX="16dp" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_stop_follow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_input"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/stop_follow"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_title"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_doctor_name"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_follow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_input"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/follow"
+        android:textAllCaps="false"
+        android:visibility="invisible"
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_title"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_doctor_name"
@@ -162,17 +207,17 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_input"
         android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_marginBottom="@dimen/spacing_medium"
         android:background="@drawable/button_background"
         android:clickable="false"
         android:fontFamily="@font/montserrat_semibold"
         android:text="@string/view_posts"
         android:textAllCaps="false"
-        android:layout_marginTop="@dimen/spacing_medium"
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_title"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_save_edit" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

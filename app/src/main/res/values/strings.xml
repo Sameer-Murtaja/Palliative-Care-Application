@@ -23,6 +23,8 @@
     <string name="doctor_name">اسم الدكتور</string>
     <string name="topic_details">تفاصيل الموضوع</string>
     <string name="edit">تعديل</string>
+    <string name="follow">متابعة</string>
+    <string name="stop_follow">إلغاء المتابعة</string>
     <string name="view_posts">المنشورات</string>
     <string name="details">التفاصيل</string>
     <string name="attachments_count">عدد الملحقات: </string>

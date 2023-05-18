@@ -12,23 +12,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.palliativecareapplication.adapter.TopicAdapter
-import com.example.palliativecareapplication.databinding.FragmentMainScreenBinding
+import com.example.palliativecareapplication.databinding.FragmentViewTopicsBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class MainScreenFragment : Fragment() {
+class ViewTopicsFragment : Fragment() {
     lateinit var db: FirebaseFirestore
 
-    lateinit var binding: FragmentMainScreenBinding
+    lateinit var binding: FragmentViewTopicsBinding
     private var progressDialog: ProgressDialog? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMainScreenBinding.inflate(inflater, container, false)
+        binding = FragmentViewTopicsBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -43,6 +43,36 @@ class MainScreenFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+        viewTopics()
+
+        if(MainActivity.isPatient){
+            binding.btnAdd.visibility = View.GONE
+        }
+
+        binding.btnAdd.setOnClickListener {
+            MainActivity.swipeFragment(requireActivity(), AddTopicFragment())
+        }
+
+
+        binding.textInputSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                (binding.rvTopics.adapter as TopicAdapter).search(s.toString())
+            }
+
+        })
+
+    }
+
+    private fun viewTopics() {
         showDialog("Loading topics");
         val topicsArr = ArrayList<Topic>()
         db.collection(FirebaseNames.COLLECTION_TOPICS)
@@ -73,31 +103,9 @@ class MainScreenFragment : Fragment() {
             }.addOnFailureListener { error ->
                 Log.e("hzm", error.message.toString())
                 hideDialog()
-                Toast.makeText(requireContext(), "Error while retrieving data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error while retrieving data", Toast.LENGTH_SHORT)
+                    .show()
             }
-
-
-
-        binding.btnAdd.setOnClickListener {
-            MainActivity.swipeFragment(requireActivity(), AddTopicFragment())
-        }
-
-
-        binding.textInputSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                (binding.rvTopics.adapter as TopicAdapter).search(s.toString())
-            }
-
-        })
-
     }
 
 

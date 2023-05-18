@@ -46,39 +46,11 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        showDialog("Loading posts");
-        val postsArr = ArrayList<Post>()
-        db.collection(FirebaseNames.COLLECTION_TOPICS).document(topic.id)
-            .collection(FirebaseNames.COLLECTION_POSTS).get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot) {
-                    val id = document.id
-                    val title = document.getString("title")!!
-                    val details = document.getString("details")!!
-                    val attachments = (document.get("attachments") as ArrayList<HashMap<String, *>>).map {
-                        Attachment.fromHashmap(it)
-                    }
-                    postsArr.add(
-                        Post(
-                            id,
-                            title,
-                            details,
-                            attachments
-                        )
-                    )
-                }
-                val postsAdapter = PostAdapter(postsArr, topic, binding)
-                binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
-                binding.rvPosts.adapter = postsAdapter
-                hideDialog()
-            }.addOnFailureListener { error ->
-                Log.e("tag", error.message.toString())
-                hideDialog()
-                Toast.makeText(requireContext(), "Error while retrieving data", Toast.LENGTH_SHORT)
-                    .show()
-            }
+        ViewPosts()
 
-
+        if(MainActivity.isPatient){
+            binding.btnAdd.visibility = View.GONE
+        }
 
         binding.btnAdd.setOnClickListener {
             MainActivity.swipeFragment(requireActivity(), AddPostFragment(topic))
@@ -108,6 +80,41 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
             MainActivity.removeFragment(requireActivity(), this);
         }
 
+    }
+
+    private fun ViewPosts() {
+        showDialog("Loading posts");
+        val postsArr = ArrayList<Post>()
+        db.collection(FirebaseNames.COLLECTION_TOPICS).document(topic.id)
+            .collection(FirebaseNames.COLLECTION_POSTS).get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot) {
+                    val id = document.id
+                    val title = document.getString("title")!!
+                    val details = document.getString("details")!!
+                    val attachments =
+                        (document.get("attachments") as ArrayList<HashMap<String, *>>).map {
+                            Attachment.fromHashmap(it)
+                        }
+                    postsArr.add(
+                        Post(
+                            id,
+                            title,
+                            details,
+                            attachments
+                        )
+                    )
+                }
+                val postsAdapter = PostAdapter(postsArr, topic, binding)
+                binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
+                binding.rvPosts.adapter = postsAdapter
+                hideDialog()
+            }.addOnFailureListener { error ->
+                Log.e("tag", error.message.toString())
+                hideDialog()
+                Toast.makeText(requireContext(), "Error while retrieving data", Toast.LENGTH_SHORT)
+                    .show()
+            }
     }
 
 

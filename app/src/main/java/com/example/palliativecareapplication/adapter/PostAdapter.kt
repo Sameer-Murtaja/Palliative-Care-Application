@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -49,6 +50,10 @@ class PostAdapter(var data: ArrayList<Post>, var topic: Topic, var parentBinding
                 val attachmentsAdapter = AttachmentAdapter(data[position].attachments!!,topic, parentBinding)
                 rvAttachments.layoutManager = GridLayoutManager(context, 2)
                 rvAttachments.adapter = attachmentsAdapter
+            }
+
+            if(MainActivity.isPatient){
+                btnDelete.visibility = View.GONE
             }
         }
 

@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentActivity
 class MainActivity : AppCompatActivity() {
 
     companion object {
+        var isPatient = false
+
         fun swipeFragment(activity: FragmentActivity, fragment: Fragment) {
             activity.supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, fragment).commit()
@@ -28,6 +30,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        swipeFragment(this,MainScreenFragment())
+        swipeFragment(this,ViewTopicsFragment())
     }
 }

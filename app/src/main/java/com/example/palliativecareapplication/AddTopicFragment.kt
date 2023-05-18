@@ -41,10 +41,13 @@ class AddTopicFragment : Fragment() {
 
         db = Firebase.firestore
 
-
         val storage = Firebase.storage
         val storageRef = storage.reference
         val imageRef = storageRef.child("images")
+
+        binding.appbar.setNavigationOnClickListener {
+            MainActivity.swipeFragment(requireActivity(),ViewTopicsFragment())
+        }
 
         binding.imgTopic.setOnClickListener {
             getContent.launch("image/*")
@@ -142,7 +145,7 @@ class AddTopicFragment : Fragment() {
                 Toast.makeText(requireContext(), "Added Successfully", Toast.LENGTH_SHORT).show()
 
                 hideDialog()
-                MainActivity.swipeFragment(requireActivity(),MainScreenFragment())
+                MainActivity.swipeFragment(requireActivity(),ViewTopicsFragment())
             }
             .addOnFailureListener {
                 Log.e("TAG", it.message.toString())
