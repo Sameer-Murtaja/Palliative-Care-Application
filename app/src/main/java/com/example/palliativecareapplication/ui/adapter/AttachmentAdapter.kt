@@ -1,4 +1,4 @@
-package com.example.palliativecareapplication.adapter
+package com.example.palliativecareapplication.ui.adapter
 
 import android.app.DownloadManager
 import android.app.ProgressDialog
@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.palliativecareapplication.ViewPostsFragment
 import com.example.palliativecareapplication.databinding.CardAttachmentBinding
 import com.example.palliativecareapplication.databinding.FragmentViewPostsBinding
 import com.example.palliativecareapplication.model.Attachment

@@ -1,4 +1,4 @@
-package com.example.palliativecareapplication
+package com.example.palliativecareapplication.ui
 
 import android.app.ProgressDialog
 import android.graphics.Bitmap

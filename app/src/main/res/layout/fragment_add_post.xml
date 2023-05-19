@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/color_background"
 
-    tools:context=".AddPostFragment">
+    tools:context=".ui.AddPostFragment">
 
 
     <com.google.android.material.appbar.AppBarLayout

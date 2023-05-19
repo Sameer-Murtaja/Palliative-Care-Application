@@ -1,4 +1,4 @@
-package com.example.palliativecareapplication
+package com.example.palliativecareapplication.ui
 
 import android.app.ProgressDialog
 import android.graphics.Bitmap
@@ -46,7 +46,7 @@ class AddTopicFragment : Fragment() {
         val imageRef = storageRef.child("images")
 
         binding.appbar.setNavigationOnClickListener {
-            MainActivity.swipeFragment(requireActivity(),ViewTopicsFragment())
+            MainActivity.swipeFragment(requireActivity(), ViewTopicsFragment())
         }
 
         binding.imgTopic.setOnClickListener {
@@ -145,7 +145,7 @@ class AddTopicFragment : Fragment() {
                 Toast.makeText(requireContext(), "Added Successfully", Toast.LENGTH_SHORT).show()
 
                 hideDialog()
-                MainActivity.swipeFragment(requireActivity(),ViewTopicsFragment())
+                MainActivity.swipeFragment(requireActivity(), ViewTopicsFragment())
             }
             .addOnFailureListener {
                 Log.e("TAG", it.message.toString())
