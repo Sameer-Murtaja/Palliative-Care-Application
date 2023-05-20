@@ -1,4 +1,4 @@
-package com.example.palliativecareapplication
+package com.example.palliativecareapplication.ui
 
 import android.app.ProgressDialog
 import android.os.Bundle
@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.palliativecareapplication.adapter.PostAdapter
+import com.example.palliativecareapplication.ui.adapter.PostAdapter
 import com.example.palliativecareapplication.databinding.FragmentViewPostsBinding
 import com.example.palliativecareapplication.model.Attachment
 import com.example.palliativecareapplication.model.FirebaseNames
