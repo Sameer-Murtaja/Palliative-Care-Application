@@ -83,13 +83,13 @@
             android:hint="@string/password"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
+            android:inputType="textPassword"
             app:endIconDrawable="@drawable/custom_password_toggle"
             app:endIconMode="password_toggle"
             app:helperTextTextColor="@color/color_warning"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_username"
-            app:passwordToggleEnabled="true"
             app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -114,11 +114,25 @@
             android:textSize="@dimen/font_size_title"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_password" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_login_as_a_doctor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_input"
+            android:layout_marginHorizontal="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:background="@drawable/button_border_background"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/login_as_a_doctor"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_title"
+            app:layout_constraintTop_toBottomOf="@id/button_login" />
+
         <ProgressBar
             android:id="@+id/progress_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/text_view_question"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

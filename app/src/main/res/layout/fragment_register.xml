@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_background"
     android:fillViewport="true"
+    android:id="@+id/register_screen"
     android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +62,7 @@
             android:textColorHint="@color/color_text_tertiary"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
-            app:helperText=""
+
             app:startIconDrawable="@drawable/ic_user"
             app:helperTextTextColor="@color/color_warning"
             app:layout_constraintTop_toBottomOf="@id/image_sign_up"
@@ -89,7 +90,7 @@
             android:textColorHint="@color/color_text_tertiary"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
-            app:helperText=""
+
             app:startIconDrawable="@drawable/ic_address"
             app:helperTextTextColor="@color/color_warning"
             app:layout_constraintTop_toBottomOf="@+id/container_full_name"
@@ -142,11 +143,11 @@
             android:autofillHints="emailAddress"
             android:drawableStart="@drawable/ic_user"
             android:hint="@string/email"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:textColorHint="@color/color_text_tertiary"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
-            app:helperText=""
+
             app:startIconDrawable="@drawable/ic_email"
             app:helperTextTextColor="@color/color_warning"
             app:layout_constraintBottom_toTopOf="@id/container_password"
@@ -170,6 +171,7 @@
             android:layout_marginHorizontal="@dimen/spacing_medium"
             android:layout_marginTop="@dimen/spacing_medium"
             android:autofillHints="password"
+            android:inputType="textPassword"
             android:hint="@string/password"
             android:textColorHint="@color/color_text_tertiary"
             app:boxStrokeWidth="0dp"
@@ -200,6 +202,7 @@
             android:layout_marginHorizontal="@dimen/spacing_medium"
             android:autofillHints="password"
             android:hint="@string/confirm_password"
+            android:inputType="textPassword"
             android:textColorHint="@color/color_text_tertiary"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
@@ -234,6 +237,21 @@
             android:textSize="@dimen/font_size_title"
             app:layout_constraintTop_toBottomOf="@+id/container_confirm_password"
             tools:layout_editor_absoluteX="16dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_register_as_a_doctor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_input"
+            android:layout_marginHorizontal="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:background="@drawable/button_border_background"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/register_as_a_doctor"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_title"
+            app:layout_constraintTop_toBottomOf="@id/button_sign_up" />
+
 
         <ProgressBar
             android:id="@+id/progress_loading"
