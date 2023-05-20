@@ -59,7 +59,7 @@ class RegisterFragment: Fragment() {
     private fun onSignupButtonPressed() {
         binding.buttonSignUp.setOnClickListener {
             showLoading()
-            LoginFragment.isADoctor = false
+            isADoctor = false
             assignUserInfo()
             if (checkFormsNotEmpty()) {
                 authSignUp(email = username, password = password)
@@ -73,7 +73,7 @@ class RegisterFragment: Fragment() {
     private fun onsSignupAsADoctorButtonPressed() {
         binding.buttonRegisterAsADoctor.setOnClickListener {
             showLoading()
-            LoginFragment.isADoctor = true
+            isADoctor = true
             assignUserInfo()
             if (!checkFormsNotEmpty() && chickThePasswordAndTheConfirmIsSame()) {
                 hideLoading()
@@ -101,6 +101,7 @@ class RegisterFragment: Fragment() {
                 if (task.isSuccessful) {
                     hideLoading()
                     val user = auth.currentUser
+
                     onSignupSuccess()
                 } else {
                     onLoginFail()
