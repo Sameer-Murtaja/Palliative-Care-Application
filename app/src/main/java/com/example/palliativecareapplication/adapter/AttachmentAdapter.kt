@@ -113,7 +113,7 @@ class AttachmentAdapter(
         // Finally assign this media source to the player
         player?.apply {
             setMediaSource(mediaSource)
-            playWhenReady = true // start playing when the exoplayer has setup
+            playWhenReady = false // start playing when the exoplayer has setup
             seekTo(0, 0L) // Start from the beginning
             prepare() // Change the state from idle.
         }
