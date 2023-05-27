@@ -15,6 +15,7 @@ import com.example.palliativecareapplication.databinding.FragmentViewPostsBindin
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Post
 import com.example.palliativecareapplication.model.Topic
+import com.example.palliativecareapplication.ui.LoginFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -48,7 +49,7 @@ class PostAdapter(var data: ArrayList<Post>, var topic: Topic, var parentBinding
                 rvAttachments.adapter = attachmentsAdapter
             }
 
-            if(MainActivity.isPatient){
+            if(!MainActivity.user.isDoctor){
                 btnDelete.visibility = View.GONE
             }
         }

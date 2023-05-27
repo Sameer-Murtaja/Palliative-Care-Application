@@ -17,7 +17,10 @@ import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 import com.google.firebase.storage.ktx.storage
 
 class AddPostFragment(var topic: Topic) : Fragment() {
@@ -61,6 +64,7 @@ class AddPostFragment(var topic: Topic) : Fragment() {
                 // Get the data from an ImageView as bytes
                 //val data = getImageData()
                 addPost(title, description)
+                sendNotification()
 
             } else {
                 Toast.makeText(requireContext(), "Please fill the data", Toast.LENGTH_SHORT).show()
@@ -153,6 +157,38 @@ class AddPostFragment(var topic: Topic) : Fragment() {
             }
             .addOnFailureListener {
                 Log.e("TAG", it.message.toString())
+            }
+    }
+
+
+    private fun sendNotification() {
+        FirebaseInstallations.getInstance().getToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result?.token
+                    Log.e("TAG", "successfully got FCM token $token", task.exception)
+
+                    val messageId = System.currentTimeMillis().toString()
+
+                    val message = token?.let {
+                        RemoteMessage.Builder(it)
+                            .setMessageId(messageId)
+                            .setData(
+                                mapOf(
+                                    "title" to "A new post on ${topic.title}",
+                                    "body" to "check the new post",
+                                    "topic" to topic.title
+                                )
+                            )
+                            .build()
+                    }
+
+                    message?.let {
+                        FirebaseMessaging.getInstance().send(it)
+                    }
+                } else {
+                    Log.e("TAG", "Failed to get FCM token", task.exception)
+                }
             }
     }
 
