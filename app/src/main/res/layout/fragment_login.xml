@@ -126,6 +126,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_title"
+            android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@id/button_login" />
 
         <ProgressBar

@@ -1,6 +1,7 @@
 package com.example.palliativecareapplication.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,29 +9,34 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.example.palliativecareapplication.R
 import com.example.palliativecareapplication.databinding.FragmentLoginBinding
+import com.example.palliativecareapplication.model.FirebaseNames
+import com.example.palliativecareapplication.model.User
 import com.example.palliativecareapplication.util.navigateWithAddFragment
 import com.example.palliativecareapplication.util.navigateWithReplaceFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 class LoginFragment: Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var auth: FirebaseAuth
+    lateinit var db: FirebaseFirestore
 
     private lateinit var username: String
     private lateinit var password: String
-    companion object{
-        var isADoctor = false
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         auth = Firebase.auth
+        db = Firebase.firestore
 
         return binding.root
     }
@@ -43,7 +49,6 @@ class LoginFragment: Fragment() {
 
     private fun addCallbacks() {
         onLoginButtonPressed()
-        onLoginAsADoctorButtonPressed()
         onSignupTextPressed()
         onFormTextChange()
     }
@@ -53,24 +58,8 @@ class LoginFragment: Fragment() {
     private fun onLoginButtonPressed() {
         binding.buttonLogin.setOnClickListener {
             showLoading()
-            isADoctor = false
             assignUsernameAndPassword()
             if (checkFormsNotEmpty()) {
-                authLogin(email = username, password = password)
-            } else {
-                hideLoading()
-                alertEmptyForm()
-            }
-        }
-    }
-
-    private fun onLoginAsADoctorButtonPressed() {
-        binding.buttonLoginAsADoctor.setOnClickListener {
-            showLoading()
-            isADoctor = true
-            assignUsernameAndPassword()
-            if (checkFormsNotEmpty()) {
-                hideLoading()
                 authLogin(email = username, password = password)
             } else {
                 hideLoading()
@@ -136,7 +125,32 @@ class LoginFragment: Fragment() {
     }
 
     private fun onLoginSuccess() {
-        this.navigateWithReplaceFragment(ViewTopicsFragment())
+        getUserFromFirebase()
+    }
+
+    private fun getUserFromFirebase(){
+        showLoading()
+        val id = auth.currentUser!!.uid
+        db.collection(FirebaseNames.COLLECTION_USERS)
+            .whereEqualTo("id", id)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot) {
+                    val user = User(
+                        document.id,
+                        document.getString("name")!!,
+                        document.getBoolean("isDoctor") == true,
+                        document.get("topicsFollowed")!! as ArrayList<String>,
+                    )
+                    MainActivity.user = user
+                    Log.e("tag", "user Added Successfully")
+                    hideLoading()
+                    this.navigateWithReplaceFragment(ViewTopicsFragment())
+                }
+            }.addOnFailureListener { error ->
+                Log.e("hzm", error.message.toString())
+            }
     }
 
 

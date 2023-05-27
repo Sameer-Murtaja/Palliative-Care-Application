@@ -14,6 +14,7 @@ import com.example.palliativecareapplication.ui.TopicDetailsFragment
 import com.example.palliativecareapplication.databinding.CardTopicBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
+import com.example.palliativecareapplication.ui.LoginFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -43,7 +44,7 @@ class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapte
             tvFollowersCount.text = "${data[position].usersFollowing} متابعين"
             Picasso.get().load(data[position].image).into(imgTopic)
 
-            if(MainActivity.isPatient){
+            if(!MainActivity.user.isDoctor){
                 tvFollowersCount.visibility = View.GONE
             }
         }

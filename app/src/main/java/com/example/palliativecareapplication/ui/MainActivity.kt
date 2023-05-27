@@ -5,11 +5,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.palliativecareapplication.R
+import com.example.palliativecareapplication.model.User
+import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        var isPatient = false
+
+        lateinit var user:User
 
         fun swipeFragment(activity: FragmentActivity, fragment: Fragment) {
             activity.supportFragmentManager.beginTransaction()
@@ -32,5 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         swipeFragment(this, LoginFragment())
+
+        FirebaseApp.initializeApp(this)
     }
 }
