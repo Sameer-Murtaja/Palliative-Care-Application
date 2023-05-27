@@ -85,17 +85,12 @@ class ViewTopicsFragment : Fragment() {
                     val doctorName = document.getString("doctorName")!!
                     val image = document.getString("image")!!
                     val usersFollowing = document.getDouble("usersFollowing")!!.toInt()
+                    val currentDate = document.getLong("date")!!
                     topicsArr.add(
-                        Topic(
-                            id,
-                            title,
-                            description,
-                            doctorName,
-                            image,
-                            usersFollowing
-                        )
+                        Topic(id, title, description, doctorName, image, usersFollowing, currentDate)
                     )
                 }
+
                 val topicsAdapter = TopicAdapter(topicsArr)
                 binding.rvTopics.layoutManager = LinearLayoutManager(requireContext())
                 binding.rvTopics.adapter = topicsAdapter
@@ -121,5 +116,12 @@ class ViewTopicsFragment : Fragment() {
         if (progressDialog!!.isShowing)
             progressDialog!!.dismiss()
     }
+
+}
+
+fun main() {
+    println(System.currentTimeMillis())
+    Thread.sleep(2000)
+    println(System.currentTimeMillis())
 
 }

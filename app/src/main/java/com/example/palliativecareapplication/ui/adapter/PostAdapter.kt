@@ -20,13 +20,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class PostAdapter(var data: ArrayList<Post>, var topic: Topic, var parentBinding: FragmentViewPostsBinding) :
+class PostAdapter(var data: List<Post>, var topic: Topic, var parentBinding: FragmentViewPostsBinding) :
     RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     lateinit var context: Context
     lateinit var db: FirebaseFirestore
     private var initialData = data
 
 
+    init {
+        data = data.sortedByDescending { it.date }
+    }
     class MyViewHolder(val cardViewBinding: CardPostBinding) :
         RecyclerView.ViewHolder(cardViewBinding.root)
 
@@ -90,7 +93,7 @@ class PostAdapter(var data: ArrayList<Post>, var topic: Topic, var parentBinding
             .delete()
             .addOnSuccessListener { _ ->
                 Log.e("TAG", "Deleted Successfully")
-                data.removeAt(position)
+                data.toMutableList().removeAt(position)
                 notifyDataSetChanged()
             }.addOnFailureListener { exception ->
                 Log.e("TAG", exception.message.toString())

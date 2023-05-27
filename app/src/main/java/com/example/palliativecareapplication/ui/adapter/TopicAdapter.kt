@@ -14,17 +14,19 @@ import com.example.palliativecareapplication.ui.TopicDetailsFragment
 import com.example.palliativecareapplication.databinding.CardTopicBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
-import com.example.palliativecareapplication.ui.LoginFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
-class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapter.MyViewHolder>() {
+class TopicAdapter(var data: List<Topic>): RecyclerView.Adapter<TopicAdapter.MyViewHolder>() {
     lateinit var context: Context
     lateinit var db: FirebaseFirestore
     private var initialData = data
 
+    init {
+        data = data.sortedByDescending { it.date }
+    }
 
     class MyViewHolder(val cardViewBinding: CardTopicBinding): RecyclerView.ViewHolder(cardViewBinding.root)
 
@@ -90,7 +92,7 @@ class TopicAdapter(var data: ArrayList<Topic>): RecyclerView.Adapter<TopicAdapte
             .delete()
             .addOnSuccessListener { _ ->
                 Log.e("TAG", "Deleted Successfully")
-                data.removeAt(position)
+                data.toMutableList().removeAt(position)
                 notifyDataSetChanged()
             }.addOnFailureListener { exception ->
                 Log.e("TAG", exception.message.toString())
