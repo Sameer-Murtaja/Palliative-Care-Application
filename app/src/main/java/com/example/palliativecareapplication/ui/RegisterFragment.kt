@@ -1,24 +1,30 @@
 package com.example.palliativecareapplication.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.palliativecareapplication.R
 import com.example.palliativecareapplication.databinding.FragmentRegisterBinding
+import com.example.palliativecareapplication.model.FirebaseNames
+import com.example.palliativecareapplication.model.User
 import com.example.palliativecareapplication.util.navigateWithAddFragment
 import com.example.palliativecareapplication.util.navigateWithReplaceFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class RegisterFragment: Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var auth: FirebaseAuth
+    lateinit var db: FirebaseFirestore
 
     private lateinit var username: String
     private lateinit var password: String
@@ -26,15 +32,15 @@ class RegisterFragment: Fragment() {
     private lateinit var fullName: String
     private lateinit var address: String
     private lateinit var phone: String
-    companion object{
-        var isADoctor = false
-    }
+    var isADoctor = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
         auth = Firebase.auth
+        db = Firebase.firestore
 
         return binding.root
     }
@@ -59,7 +65,7 @@ class RegisterFragment: Fragment() {
     private fun onSignupButtonPressed() {
         binding.buttonSignUp.setOnClickListener {
             showLoading()
-            LoginFragment.isADoctor = false
+            isADoctor = false
             assignUserInfo()
             if (checkFormsNotEmpty()) {
                 authSignUp(email = username, password = password)
@@ -73,10 +79,9 @@ class RegisterFragment: Fragment() {
     private fun onsSignupAsADoctorButtonPressed() {
         binding.buttonRegisterAsADoctor.setOnClickListener {
             showLoading()
-            LoginFragment.isADoctor = true
+            isADoctor = true
             assignUserInfo()
-            if (!checkFormsNotEmpty() && chickThePasswordAndTheConfirmIsSame()) {
-                hideLoading()
+            if (checkFormsNotEmpty()) {
                 authSignUp(email = username, password = password)
             } else {
                 alertEmptyForm()
@@ -153,7 +158,33 @@ class RegisterFragment: Fragment() {
     }
 
     private fun onSignupSuccess() {
-        this.navigateWithReplaceFragment(ViewTopicsFragment())
+        addUserToFirebase(isADoctor)
+    }
+
+
+    private fun addUserToFirebase(isDoctor: Boolean){
+
+        val id = auth.currentUser!!.uid
+        Log.e("tag", "authSingUp: $id")
+
+        var user = hashMapOf(
+            "id" to id,
+            "name" to username,
+            "isDoctor" to isDoctor,
+            "topicsFollowed" to ArrayList<String>()
+        )
+        MainActivity.user = User(id,username,isDoctor,ArrayList())
+
+        db.collection(FirebaseNames.COLLECTION_USERS).document(id)
+            .set(user)
+            .addOnSuccessListener { documentReference ->
+                Log.e("tag", "Added Successfully $id")
+                this.navigateWithReplaceFragment(ViewTopicsFragment())
+            }
+            .addOnFailureListener {
+                Log.e("tag", it.message.toString())
+            }
+
     }
 
 

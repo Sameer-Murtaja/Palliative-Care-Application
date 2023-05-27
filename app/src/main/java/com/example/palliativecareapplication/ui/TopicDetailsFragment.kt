@@ -6,24 +6,26 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import com.example.palliativecareapplication.databinding.FragmentTopicDetailsBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
+import com.example.palliativecareapplication.util.navigateWithReplaceFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
 
-class TopicDetailsFragment(var topicData: Topic) : Fragment() {
+class TopicDetailsFragment(var topic: Topic) : Fragment() {
 
     lateinit var db: FirebaseFirestore
     lateinit var binding: FragmentTopicDetailsBinding
@@ -82,10 +84,10 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
     }
 
     private fun setTopicDataToUI() {
-        Picasso.get().load(topicData.image).into(binding.imgTopic)
-        binding.textInputTitle.setText(topicData.title)
-        binding.textInputDescription.setText(topicData.description)
-        binding.textInputDoctorName.setText(topicData.doctorName)
+        Picasso.get().load(topic.image).into(binding.imgTopic)
+        binding.textInputTitle.setText(topic.title)
+        binding.textInputDescription.setText(topic.description)
+        binding.textInputDoctorName.setText(topic.doctorName)
     }
 
     private fun returnToMainOnAppBarButtonClick() {
@@ -95,38 +97,64 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
     }
 
     private fun handlePatientUI() {
-        if (MainActivity.isPatient) {
-            //todo: if(is not following this topic)
+        if (!MainActivity.user.isDoctor) {
             binding.btnEdit.visibility = View.GONE
-            binding.buttonFollow.visibility = View.VISIBLE
+
+            //if user is following this topic, show unfollow button
+            if(MainActivity.user.topicsFollowed.contains(topic.id)){
+                binding.buttonStopFollow.visibility = View.VISIBLE
+            }else{
+                binding.buttonFollow.visibility = View.VISIBLE
+            }
 
             binding.buttonFollow.setOnClickListener {
                 showDialog("جار الإضافة لقائمة المتابعة..")
-                addFollow()
+                addTopicToUser()
+                increaseFollowCount()
+                subscribeToNotifications()
             }
 
             binding.buttonStopFollow.setOnClickListener {
                 showDialog("جار الإزالة من قائمة المتابعة..")
-                stopFollow()
+                removeTopicFromUser()
+                decreaseFollowCount()
+                unsubscribeToNotifications()
             }
         }
     }
 
-    private fun addFollow() {
-        topicData.usersFollowing += 1
+    private fun addTopicToUser(){
+        MainActivity.user.topicsFollowed.add(topic.id)
+
+        db.collection(FirebaseNames.COLLECTION_USERS).document(MainActivity.user.id)
+            .set(MainActivity.user)
+            .addOnSuccessListener {
+                Log.e("tag", "added Topic To User Successfully $id")
+            }
+            .addOnFailureListener {
+                Log.e("tag", it.message.toString())
+            }
+    }
+
+    private fun increaseFollowCount() {
+        topic.usersFollowing += 1
         val topic = hashMapOf(
-            "title" to topicData.title,
-            "description" to topicData.description,
-            "doctorName" to topicData.doctorName,
-            "image" to topicData.image,
-            "usersFollowing" to topicData.usersFollowing
+            "title" to topic.title,
+            "description" to topic.description,
+            "doctorName" to topic.doctorName,
+            "image" to topic.image,
+            "usersFollowing" to topic.usersFollowing
         )
 
-        db.collection(FirebaseNames.COLLECTION_TOPICS).document(topicData.id)
+        db.collection(FirebaseNames.COLLECTION_TOPICS).document(this.topic.id)
             .update(topic as Map<String, Any>)
             .addOnSuccessListener {
                 Log.e("TAG", "added Follow")
-                Toast.makeText(requireContext(), "تمت إضافة الموضوع لقائمة المتابعة", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "تمت إضافة الموضوع لقائمة المتابعة",
+                    Toast.LENGTH_SHORT
+                ).show()
                 hideDialog()
 
                 binding.buttonFollow.visibility = View.INVISIBLE
@@ -139,22 +167,47 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
             }
     }
 
-    private fun stopFollow() {
-        topicData.usersFollowing -= 1
+    private fun subscribeToNotifications() {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic.title)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("TAG", "Successfully subscribed to topic")
+                } else {
+                    Log.e("TAG", "Failed to subscribe to topic", task.exception)
+                }
+            }
+    }
+
+    private fun removeTopicFromUser(){
+        MainActivity.user.topicsFollowed.remove(topic.id)
+
+        db.collection(FirebaseNames.COLLECTION_USERS).document(MainActivity.user.id)
+            .set(MainActivity.user)
+            .addOnSuccessListener {
+                Log.e("tag", "removed Topic from User Successfully $id")
+            }
+            .addOnFailureListener {
+                Log.e("tag", it.message.toString())
+            }
+    }
+
+    private fun decreaseFollowCount() {
+        topic.usersFollowing -= 1
 
         val topic = hashMapOf(
-            "title" to topicData.title,
-            "description" to topicData.description,
-            "doctorName" to topicData.doctorName,
-            "image" to topicData.image,
-            "usersFollowing" to topicData.usersFollowing
+            "title" to topic.title,
+            "description" to topic.description,
+            "doctorName" to topic.doctorName,
+            "image" to topic.image,
+            "usersFollowing" to topic.usersFollowing
         )
 
-        db.collection(FirebaseNames.COLLECTION_TOPICS).document(topicData.id)
+        db.collection(FirebaseNames.COLLECTION_TOPICS).document(this.topic.id)
             .update(topic as Map<String, Any>)
             .addOnSuccessListener {
                 Log.e("TAG", "removed Follow")
-                Toast.makeText(requireContext(), "تمت إزالة متابعة الموضوع", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "تمت إزالة متابعة الموضوع", Toast.LENGTH_SHORT)
+                    .show()
                 hideDialog()
 
                 binding.buttonFollow.visibility = View.VISIBLE
@@ -163,6 +216,17 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
             .addOnFailureListener {
                 Log.e("TAG", it.message.toString())
                 hideDialog()
+            }
+    }
+
+    private fun unsubscribeToNotifications() {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic.title)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("TAG", "Successfully unsubscribed to topic")
+                } else {
+                    Log.e("TAG", "Failed to unsubscribe to topic", task.exception)
+                }
             }
     }
 
@@ -183,7 +247,7 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
         val imageRef = storageRef.child("images")
 
 
-        val id = topicData.id
+        val id = topic.id
         val title = binding.textInputTitle.text.toString()
         val description = binding.textInputDescription.text.toString()
         val doctorName = binding.textInputDoctorName.text.toString()
@@ -204,7 +268,7 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
 
     private fun ViewTopicsOnClick() {
         binding.buttonViewPosts.setOnClickListener {
-            MainActivity.swipeFragment(requireActivity(), ViewPostsFragment(topicData))
+            MainActivity.swipeFragment(requireActivity(), ViewPostsFragment(topic))
         }
     }
 
@@ -268,7 +332,7 @@ class TopicDetailsFragment(var topicData: Topic) : Fragment() {
             "description" to description,
             "doctorName" to doctorName,
             "image" to image,
-            "usersFollowing" to topicData.usersFollowing
+            "usersFollowing" to topic.usersFollowing
         )
 
         db.collection(FirebaseNames.COLLECTION_TOPICS).document(id)

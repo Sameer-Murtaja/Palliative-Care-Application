@@ -46,7 +46,7 @@ class ViewTopicsFragment : Fragment() {
 
         viewTopics()
 
-        if(MainActivity.isPatient){
+        if(!MainActivity.user.isDoctor){
             binding.btnAdd.visibility = View.GONE
         }
 

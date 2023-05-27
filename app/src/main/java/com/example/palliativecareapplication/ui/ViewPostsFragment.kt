@@ -48,7 +48,7 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
 
         ViewPosts()
 
-        if(MainActivity.isPatient){
+        if(!MainActivity.user.isDoctor){
             binding.btnAdd.visibility = View.GONE
         }
 
