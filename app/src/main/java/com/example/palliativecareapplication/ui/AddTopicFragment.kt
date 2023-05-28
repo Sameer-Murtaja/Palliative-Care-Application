@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import com.example.palliativecareapplication.databinding.FragmentAddTopicBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
+import java.time.LocalDateTime
 
 class AddTopicFragment : Fragment() {
 
@@ -102,6 +105,7 @@ class AddTopicFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun uploadImageAndTopic(
         imageRef: StorageReference,
         data: ByteArray,
@@ -128,6 +132,7 @@ class AddTopicFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun addTopic(
         title: String, description: String, doctorName: String, image: String
     ) {
@@ -136,7 +141,8 @@ class AddTopicFragment : Fragment() {
             "description" to description,
             "doctorName" to doctorName,
             "image" to image,
-            "usersFollowing" to 0
+            "usersFollowing" to 0,
+            "date" to System.currentTimeMillis()
         )
         db.collection(FirebaseNames.COLLECTION_TOPICS)
             .add(topic)

@@ -143,6 +143,7 @@ class AddPostFragment(var topic: Topic) : Fragment() {
         val post = hashMapOf(
             "title" to title,
             "details" to details,
+            "date" to System.currentTimeMillis(),
             "attachments" to attachments
         )
         db.collection(FirebaseNames.COLLECTION_TOPICS)

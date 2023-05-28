@@ -92,6 +92,7 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
                     val id = document.id
                     val title = document.getString("title")!!
                     val details = document.getString("details")!!
+                    val currentDate = document.getLong("date")!!
                     val attachments =
                         (document.get("attachments") as ArrayList<HashMap<String, *>>).map {
                             Attachment.fromHashmap(it)
@@ -101,6 +102,7 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
                             id,
                             title,
                             details,
+                            currentDate,
                             attachments
                         )
                     )
