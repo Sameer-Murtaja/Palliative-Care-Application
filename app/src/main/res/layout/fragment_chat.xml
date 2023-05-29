@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ChatFragment">
+    tools:context=".ui.ChatFragment"
+    android:background="@color/color_background"
+    >
 
 
 
@@ -33,22 +35,20 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/container_full_name"
-        android:layout_width="match_parent"
+
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacing_medium"
-        android:layout_marginEnd="70dp"
-        android:layout_marginBottom="16dp"
-
+        android:layout_marginBottom="@dimen/spacing_normal"
         android:autofillHints="username"
-        android:hint="@string/full_name"
+        android:hint="@string/message"
         android:textColorHint="@color/color_text_tertiary"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:helperTextTextColor="@color/color_warning"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:startIconDrawable="@drawable/ic_user">
+        app:layout_constraintEnd_toStartOf="@+id/btnSend"
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_message"
@@ -59,26 +59,37 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageButton
-        android:id="@+id/btnSend"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/btn_add"
-        android:src="@drawable/ic_add"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/btnSend"-->
+<!--        android:layout_width="48dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginEnd="48dp"-->
+<!--        android:background="@drawable/btn_add"-->
+<!--        android:src="@drawable/ic_add"-->
+<!--        android:textSize="30sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        tools:ignore="SpeakableTextPresentCheck"-->
+<!--        tools:layout_editor_absoluteY="383dp" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rs_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/spacing_normal"
         app:layout_constraintBottom_toTopOf="@+id/container_full_name"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_app_bar" />
+
+    <ImageView
+        android:id="@+id/btnSend"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:src="@drawable/ic__send_"
+        app:layout_constraintBottom_toBottomOf="@+id/container_full_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/container_full_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

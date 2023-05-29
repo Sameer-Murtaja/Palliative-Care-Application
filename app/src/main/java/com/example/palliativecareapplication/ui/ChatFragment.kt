@@ -68,7 +68,8 @@ class ChatFragment : Fragment() {
 
                     val messageMapper = MassageMapper()
                     snapshot.value.let {
-                        val messages = messageMapper.map(snapshot.value.toString())
+                        Log.e("bk", "json: $it", )
+                        val messages = messageMapper.map(it.toString())
                         count = messages.size
                         setupAdapter(messages.toList())
                         //chatAdapter.addData(messages.toList())

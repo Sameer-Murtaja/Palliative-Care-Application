@@ -40,4 +40,5 @@
     <string name="login_as_a_doctor">تسجيل الدخول كطبيب</string>
     <string name="register_as_a_doctor">تسجيل حساب كطبيب</string>
     <string name="chat">المحادثة</string>
+    <string name="message">الرسالة</string>
 </resources>

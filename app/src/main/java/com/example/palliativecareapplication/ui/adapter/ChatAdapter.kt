@@ -25,7 +25,7 @@ class ChatAdapter (var data: List<Message>): RecyclerView.Adapter<ChatAdapter.My
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.cardViewBinding.apply {
             Log.e("bkk", "onBindViewHolder: name: ${data[position].name} /// message: ${data[position].message}", )
-            tvName.text = data[position].name
+            tvName.text = extractUsername(data[position].name)
             tvMessage.text = data[position].message
 
         }
@@ -41,6 +41,16 @@ class ChatAdapter (var data: List<Message>): RecyclerView.Adapter<ChatAdapter.My
             notifyDataSetChanged()
         }
     }
+
+    private fun extractUsername(email: String): String {
+        val atIndex = email.indexOf('@')
+        return if (atIndex != -1) {
+            email.substring(0, atIndex)
+        } else {
+            email
+        }
+    }
+
 
 
 }
