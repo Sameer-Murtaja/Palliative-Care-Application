@@ -18,13 +18,14 @@ import com.example.palliativecareapplication.util.MassageMapper
 import com.example.palliativecareapplication.util.navigateWithReplaceFragment
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import org.json.JSONObject
 
 
-class ChatFragment : Fragment() {
+class ChatFragment(val chatName : String) : Fragment() {
     lateinit var binding: FragmentChatBinding
     val database = Firebase.database
     val myRef = database.getReference("chat")
@@ -53,7 +54,7 @@ class ChatFragment : Fragment() {
                     "message" to messageInput,
                     "name" to MainActivity.user.name,
                 )
-                myRef.child("Doctor").child(count.toString()).setValue(message)
+                getRef().child(count.toString()).setValue(message)
                 //count++
                 Toast.makeText(requireContext(), "success", Toast.LENGTH_SHORT).show()
                 binding.textInputMessage.setText("")
@@ -62,12 +63,15 @@ class ChatFragment : Fragment() {
             binding.textInputMessage.setText("")
         }
 
-        myRef.child("Doctor")
+        getRef()
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     val messageMapper = MassageMapper()
                     snapshot.value.let {
+                        if(it == null || it.toString().isBlank()){
+                            return
+                        }
                         Log.e("bk", "json: $it", )
                         val messages = messageMapper.map(it.toString())
                         count = messages.size
@@ -92,6 +96,9 @@ class ChatFragment : Fragment() {
         binding.appbar.setNavigationOnClickListener {
             this.navigateWithReplaceFragment(ViewTopicsFragment())
         }
+    }
+    private  fun getRef() : DatabaseReference{
+        return myRef.child(chatName)
     }
 
     fun setupAdapter(messages: List<Message>){

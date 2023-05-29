@@ -57,8 +57,11 @@ class ViewTopicsFragment : Fragment() {
             this.navigateWithReplaceFragment(AddTopicFragment())
         }
 
-        binding.btnSend.setOnClickListener {
-            this.navigateWithReplaceFragment(ChatFragment())
+        binding.btnSendDoctor.setOnClickListener {
+            this.navigateWithReplaceFragment(ChatFragment("Doctor"))
+        }
+        binding.btnSendAllGroup.setOnClickListener {
+            this.navigateWithReplaceFragment(ChatFragment("Patient"))
         }
 
         binding.textInputSearch.addTextChangedListener(object : TextWatcher {
