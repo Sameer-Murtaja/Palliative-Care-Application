@@ -1,5 +1,6 @@
 package com.example.palliativecareapplication.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,8 +20,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 
-class RegisterFragment: Fragment() {
+class RegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var auth: FirebaseAuth
@@ -53,13 +55,11 @@ class RegisterFragment: Fragment() {
     }
 
 
-
     private fun addCallbacks() {
         onSignupButtonPressed()
         onsSignupAsADoctorButtonPressed()
         onSigninTextPressed()
     }
-
 
 
     private fun onSignupButtonPressed() {
@@ -124,7 +124,7 @@ class RegisterFragment: Fragment() {
     }
 
     private fun alertEmptyForm() {
-        if(checkFormsNotEmpty()){
+        if (checkFormsNotEmpty()) {
             Snackbar.make(
                 binding.registerScreen,
                 getString(R.string.invalid_info),
@@ -132,7 +132,7 @@ class RegisterFragment: Fragment() {
             ).show()
         }
 
-        if(!chickThePasswordAndTheConfirmIsSame()){
+        if (!chickThePasswordAndTheConfirmIsSame()) {
             Snackbar.make(
                 binding.registerScreen,
                 getString(R.string.invalid_confirm_password),
@@ -145,10 +145,10 @@ class RegisterFragment: Fragment() {
     private fun chickThePasswordAndTheConfirmIsSame() =
         binding.textInputPassword == binding.textInputConfirmPassword
 
-  private fun checkFormsNotEmpty(): Boolean{
-      return username.isNotBlank() && password.isNotBlank() && confirmPassword.isNotBlank()
-              && fullName.isNotBlank() && address.isNotBlank() && phone.isNotBlank()
-  }
+    private fun checkFormsNotEmpty(): Boolean {
+        return username.isNotBlank() && password.isNotBlank() && confirmPassword.isNotBlank()
+                && fullName.isNotBlank() && address.isNotBlank() && phone.isNotBlank()
+    }
 
 
     private fun onSigninTextPressed() {
@@ -162,7 +162,7 @@ class RegisterFragment: Fragment() {
     }
 
 
-    private fun addUserToFirebase(isDoctor: Boolean){
+    private fun addUserToFirebase(isDoctor: Boolean) {
 
         val id = auth.currentUser!!.uid
         Log.e("tag", "authSingUp: $id")
@@ -173,7 +173,7 @@ class RegisterFragment: Fragment() {
             "isDoctor" to isDoctor,
             "topicsFollowed" to ArrayList<String>()
         )
-        MainActivity.user = User(id,username,isDoctor,ArrayList())
+        MainActivity.user = User(id, username, isDoctor, ArrayList())
 
         db.collection(FirebaseNames.COLLECTION_USERS).document(id)
             .set(user)
@@ -186,7 +186,6 @@ class RegisterFragment: Fragment() {
             }
 
     }
-
 
 
     private fun showLoading() {
