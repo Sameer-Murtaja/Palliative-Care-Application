@@ -53,7 +53,7 @@
             android:autofillHints="username"
             android:drawableStart="@drawable/ic_user"
             android:hint="@string/user_name"
-            android:inputType="text"
+            android:inputType="textWebEmailAddress"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
             app:helperTextTextColor="@color/color_warning"

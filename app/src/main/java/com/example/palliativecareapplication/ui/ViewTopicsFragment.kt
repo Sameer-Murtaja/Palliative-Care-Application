@@ -15,6 +15,7 @@ import com.example.palliativecareapplication.ui.adapter.TopicAdapter
 import com.example.palliativecareapplication.databinding.FragmentViewTopicsBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
+import com.example.palliativecareapplication.util.navigateWithReplaceFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -46,14 +47,17 @@ class ViewTopicsFragment : Fragment() {
 
         viewTopics()
 
-        if(!MainActivity.user.isDoctor){
+        if (!MainActivity.user.isDoctor) {
             binding.btnAdd.visibility = View.GONE
         }
 
         binding.btnAdd.setOnClickListener {
-            MainActivity.swipeFragment(requireActivity(), AddTopicFragment())
+            this.navigateWithReplaceFragment(AddTopicFragment())
         }
 
+        binding.btnSend.setOnClickListener {
+            this.navigateWithReplaceFragment(ChatFragment())
+        }
 
         binding.textInputSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -87,7 +91,15 @@ class ViewTopicsFragment : Fragment() {
                     val usersFollowing = document.getDouble("usersFollowing")!!.toInt()
                     val currentDate = document.getLong("date")!!
                     topicsArr.add(
-                        Topic(id, title, description, doctorName, image, usersFollowing, currentDate)
+                        Topic(
+                            id,
+                            title,
+                            description,
+                            doctorName,
+                            image,
+                            usersFollowing,
+                            currentDate
+                        )
                     )
                 }
 
