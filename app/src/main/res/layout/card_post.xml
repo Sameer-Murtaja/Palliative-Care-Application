@@ -43,13 +43,15 @@
             <TextView
                 android:id="@+id/tv_details"
                 style="@style/TextStyle.Body"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_small"
-                android:paddingBottom="10dp"
+                android:layout_marginEnd="80dp"
 
+                android:paddingBottom="10dp"
                 android:text="doctor_name"
+                app:layout_constraintEnd_toStartOf="@+id/btnComments"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
@@ -60,7 +62,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/btn_add"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/btnComments"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_delete" />
