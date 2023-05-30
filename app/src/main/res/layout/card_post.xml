@@ -29,7 +29,7 @@
             android:background="#eee">
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_Title"
                 style="@style/TextStyle.Title.Large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
 
                 android:text="doctor_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
             <ImageButton
                 android:id="@+id/btn_delete"

@@ -1,6 +1,7 @@
 package com.example.palliativecareapplication.ui
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,9 +16,11 @@ import com.example.palliativecareapplication.ui.adapter.TopicAdapter
 import com.example.palliativecareapplication.databinding.FragmentViewTopicsBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
+import com.example.palliativecareapplication.util.navigateWithReplaceFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 
 class ViewTopicsFragment : Fragment() {
     lateinit var db: FirebaseFirestore
@@ -43,17 +46,23 @@ class ViewTopicsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
+        saveUserDataINSharedPreferences()
         viewTopics()
 
-        if(!MainActivity.user.isDoctor){
+        if (!MainActivity.user.isDoctor) {
             binding.btnAdd.visibility = View.GONE
         }
 
         binding.btnAdd.setOnClickListener {
-            MainActivity.swipeFragment(requireActivity(), AddTopicFragment())
+            this.navigateWithReplaceFragment(AddTopicFragment())
         }
 
+        binding.btnSendDoctor.setOnClickListener {
+            this.navigateWithReplaceFragment(ChatFragment("Doctor"))
+        }
+        binding.btnSendAllGroup.setOnClickListener {
+            this.navigateWithReplaceFragment(ChatFragment("Patient"))
+        }
 
         binding.textInputSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -72,6 +81,20 @@ class ViewTopicsFragment : Fragment() {
 
     }
 
+    private  fun saveUserDataINSharedPreferences(){
+        val sharedPreferences = requireContext().getSharedPreferences(
+            "my_preferences",
+            Context.MODE_PRIVATE
+        )
+
+        val gson = Gson()
+        val jsonString = gson.toJson(MainActivity.user)
+
+        val editor = sharedPreferences.edit()
+        editor.putString("user_data", jsonString)
+        editor.apply()
+    }
+
     private fun viewTopics() {
         showDialog("Loading topics");
         val topicsArr = ArrayList<Topic>()
@@ -87,7 +110,15 @@ class ViewTopicsFragment : Fragment() {
                     val usersFollowing = document.getDouble("usersFollowing")!!.toInt()
                     val currentDate = document.getLong("date")!!
                     topicsArr.add(
-                        Topic(id, title, description, doctorName, image, usersFollowing, currentDate)
+                        Topic(
+                            id,
+                            title,
+                            description,
+                            doctorName,
+                            image,
+                            usersFollowing,
+                            currentDate
+                        )
                     )
                 }
 
@@ -116,6 +147,8 @@ class ViewTopicsFragment : Fragment() {
         if (progressDialog!!.isShowing)
             progressDialog!!.dismiss()
     }
+
+
 
 }
 

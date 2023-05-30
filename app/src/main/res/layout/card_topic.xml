@@ -44,7 +44,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_doctor_name"
+                android:id="@+id/tvDoctorName"
                 style="@style/TextStyle.Body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:text="3 متابعين"
 
                 app:layout_constraintStart_toEndOf="@+id/img_topic"
-                app:layout_constraintTop_toBottomOf="@+id/tv_doctor_name" />
+                app:layout_constraintTop_toBottomOf="@+id/tvDoctorName" />
 
             <ImageView
                 android:id="@+id/img_topic"
