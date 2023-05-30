@@ -98,6 +98,10 @@ class ChatFragment(val chatName : String) : Fragment() {
         }
     }
     private  fun getRef() : DatabaseReference{
+        val x = chatName.split("/")
+        if (x.size > 1){
+            return myRef.child(x[0]).child(x[1])
+        }
         return myRef.child(chatName)
     }
 
