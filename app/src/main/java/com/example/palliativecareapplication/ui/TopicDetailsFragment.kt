@@ -1,6 +1,8 @@
 package com.example.palliativecareapplication.ui
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -61,6 +63,10 @@ class TopicDetailsFragment(var topic: Topic) : Fragment() {
             binding.textInputDescription.isEnabled = true
             binding.textInputDoctorName.isEnabled = true
             selectImageOnClick()
+        }
+
+        binding.btnDelete.setOnClickListener {
+            showDeleteAlert(topic.id)
         }
 
         binding.buttonSaveEdit.setOnClickListener {
@@ -344,6 +350,35 @@ class TopicDetailsFragment(var topic: Topic) : Fragment() {
             }
             .addOnFailureListener {
                 Log.e("TAG", it.message.toString())
+            }
+    }
+
+    private fun showDeleteAlert(position: String) {
+        AlertDialog.Builder(context).apply {
+            setTitle("Delete topic")
+            setMessage("Are you sure that you want to delete this topic?")
+            setPositiveButton("Yse") { _, _ ->
+                deleteTopicById(position)
+            }
+            setCancelable(true)
+            setNegativeButton("No") { dialogInterface: DialogInterface, _ ->
+                dialogInterface.cancel()
+            }
+            create()
+            show()
+        }
+    }
+
+
+    fun deleteTopicById(position: String) {
+        db.collection(FirebaseNames.COLLECTION_TOPICS).document(position)
+            .delete()
+            .addOnSuccessListener { _ ->
+                Log.e("TAG", "Deleted Successfully")
+                this.navigateWithReplaceFragment(ViewTopicsFragment())
+            }.addOnFailureListener { exception ->
+                Log.e("TAG", exception.message.toString())
+
             }
     }
 

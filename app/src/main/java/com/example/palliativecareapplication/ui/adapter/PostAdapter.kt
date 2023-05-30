@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.palliativecareapplication.ui.MainActivity
@@ -15,7 +16,9 @@ import com.example.palliativecareapplication.databinding.FragmentViewPostsBindin
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Post
 import com.example.palliativecareapplication.model.Topic
+import com.example.palliativecareapplication.ui.ChatFragment
 import com.example.palliativecareapplication.ui.LoginFragment
+import com.example.palliativecareapplication.ui.TopicDetailsFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -52,9 +55,14 @@ class PostAdapter(var data: List<Post>, var topic: Topic, var parentBinding: Fra
                 rvAttachments.adapter = attachmentsAdapter
             }
 
-            if(!MainActivity.user.isDoctor){
-                btnDelete.visibility = View.GONE
+            if(MainActivity.user.isDoctor){
+                btnDelete.visibility = View.VISIBLE
             }
+
+        }
+        holder.cardViewBinding.btnComments.setOnClickListener {
+            MainActivity.swipeFragment(context as FragmentActivity,ChatFragment("${topic.title}/${data[position].id}")
+            )
         }
 
         holder.cardViewBinding.btnDelete.setOnClickListener {

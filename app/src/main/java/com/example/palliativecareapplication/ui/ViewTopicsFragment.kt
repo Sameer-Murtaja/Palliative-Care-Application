@@ -51,6 +51,7 @@ class ViewTopicsFragment : Fragment() {
 
         if (!MainActivity.user.isDoctor) {
             binding.btnAdd.visibility = View.GONE
+            binding.btnSendDoctor.visibility = View.GONE
         }
 
         binding.btnAdd.setOnClickListener {
@@ -62,6 +63,17 @@ class ViewTopicsFragment : Fragment() {
         }
         binding.btnSendAllGroup.setOnClickListener {
             this.navigateWithReplaceFragment(ChatFragment("Patient"))
+        }
+
+        binding.btnLogout.setOnClickListener {
+            val sharedPreferences = requireContext().getSharedPreferences(
+                "my_preferences",
+                Context.MODE_PRIVATE
+            )
+            val editor = sharedPreferences.edit()
+            editor.clear()
+            editor.apply()
+            this.navigateWithReplaceFragment(LoginFragment())
         }
 
         binding.textInputSearch.addTextChangedListener(object : TextWatcher {
