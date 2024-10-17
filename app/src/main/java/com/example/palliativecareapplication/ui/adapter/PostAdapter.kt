@@ -51,8 +51,21 @@ class PostAdapter(var data: List<Post>, var topic: Topic, var parentBinding: Fra
             tvDetails.text = data[position].details
             if (data[position].attachments?.isNotEmpty() == true) {
                 val attachmentsAdapter = AttachmentAdapter(data[position].attachments!!,topic, parentBinding)
-                rvAttachments.layoutManager = GridLayoutManager(context, 2)
+                val layoutManager = GridLayoutManager(context, 2)
+
+                // Set SpanSizeLookup to allow specific items to span multiple columns
+                layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(pos: Int): Int {
+                        val attachments = data[holder.bindingAdapterPosition].attachments
+                        attachments?.let {
+                            return if (attachments[pos].isImage() || attachments[pos].isVideo()) 1 else 2
+                        }
+                        return 1
+                    }
+                }
+                rvAttachments.layoutManager = layoutManager
                 rvAttachments.adapter = attachmentsAdapter
+
             }
 
             if(MainActivity.user.isDoctor){
@@ -112,7 +125,7 @@ class PostAdapter(var data: List<Post>, var topic: Topic, var parentBinding: Fra
 
     fun search(text: String) {
         val newArray = initialData.filter { post ->
-            post.title.contains(text) // || post.doctorName.startsWith(text)
+            post.title.contains(text, true) // || post.doctorName.startsWith(text)
         }
         data = newArray as ArrayList<Post>
         notifyDataSetChanged()

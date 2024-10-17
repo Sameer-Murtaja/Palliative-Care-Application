@@ -128,6 +128,7 @@
                 android:id="@+id/text_input_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:inputType="phone"
                 android:background="@drawable/card_background"
                 android:maxLength="20" />
 
@@ -158,6 +159,7 @@
                 android:id="@+id/text_input_username"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:inputType="textEmailAddress"
                 android:background="@drawable/card_background"
                 android:maxLength="20" />
 
@@ -169,7 +171,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/spacing_medium"
-            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:autofillHints="password"
             android:inputType="textPassword"
             android:hint="@string/password"
@@ -198,7 +200,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:layout_marginHorizontal="@dimen/spacing_medium"
             android:autofillHints="password"
             android:hint="@string/confirm_password"

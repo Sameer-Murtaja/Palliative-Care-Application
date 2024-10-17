@@ -29,7 +29,7 @@ class AddPostFragment(var topic: Topic) : Fragment() {
     private lateinit var binding: FragmentAddPostBinding
     private var progressDialog: ProgressDialog? = null
 
-    private val attachments = ArrayList<Attachment>()
+    private var attachments = ArrayList<Attachment>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,7 +92,7 @@ class AddPostFragment(var topic: Topic) : Fragment() {
         for (attachmentUri in attchmentsUris) {
             val fileName = getFileNameFromUri(attachmentUri)
             val fileType = requireContext().contentResolver.getType(attachmentUri).toString()
-            val fileExtension = fileType?.substring(fileType.lastIndexOf("/") + 1) ?: "*"
+            val fileExtension = fileType.substring(fileType.lastIndexOf("/") + 1) ?: "*"
 
 
             val childRef = fileRef.child(
@@ -102,13 +102,17 @@ class AddPostFragment(var topic: Topic) : Fragment() {
             uploadTask.addOnSuccessListener { _ ->
                 // Upload successful
                 childRef.downloadUrl.addOnSuccessListener {
-                    val attachment = Attachment(it,fileName,fileType)
+                    val attachment = Attachment(it, fileName, fileType)
                     attachments.add(attachment)
-                }
-                uploadedAttachmentsCount++
-                binding.tvAttachmentsCount.text = "count: $uploadedAttachmentsCount"
-                if (uploadedAttachmentsCount == attchmentsUris.size) {
-                    hideDialog()
+                    uploadedAttachmentsCount++
+                    binding.tvAttachmentsCount.text = "count: $uploadedAttachmentsCount"
+                    if (uploadedAttachmentsCount == attchmentsUris.size) {
+                        hideDialog()
+                        Log.e("TAG", "uploadAttachments: ${attachments.map { it.name }}")
+                        attachments =
+                            ArrayList(attachments.sortedBy { it.isImage() || it.isVideo() })
+                        Log.e("TAG", "uploadAttachments: ${attachments.map { it.name }}")
+                    }
                 }
             }.addOnFailureListener {
                 // Upload failed
@@ -134,7 +138,6 @@ class AddPostFragment(var topic: Topic) : Fragment() {
 
         return fileName
     }
-
 
 
     private fun addPost(

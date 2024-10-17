@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.palliativecareapplication.R
 import com.example.palliativecareapplication.databinding.FragmentTopicDetailsBinding
 import com.example.palliativecareapplication.model.FirebaseNames
 import com.example.palliativecareapplication.model.Topic
@@ -114,14 +115,14 @@ class TopicDetailsFragment(var topic: Topic) : Fragment() {
             }
 
             binding.buttonFollow.setOnClickListener {
-                showDialog("جار الإضافة لقائمة المتابعة..")
+                showDialog(getString(R.string.following))
                 addTopicToUser()
                 increaseFollowCount()
                 subscribeToNotifications()
             }
 
             binding.buttonStopFollow.setOnClickListener {
-                showDialog("جار الإزالة من قائمة المتابعة..")
+                showDialog(getString(R.string.unfollowing))
                 removeTopicFromUser()
                 decreaseFollowCount()
                 unsubscribeToNotifications()
@@ -158,7 +159,7 @@ class TopicDetailsFragment(var topic: Topic) : Fragment() {
                 Log.e("TAG", "added Follow")
                 Toast.makeText(
                     requireContext(),
-                    "تمت إضافة الموضوع لقائمة المتابعة",
+                    getString(R.string.follow_success),
                     Toast.LENGTH_SHORT
                 ).show()
                 hideDialog()
@@ -212,7 +213,8 @@ class TopicDetailsFragment(var topic: Topic) : Fragment() {
             .update(topic as Map<String, Any>)
             .addOnSuccessListener {
                 Log.e("TAG", "removed Follow")
-                Toast.makeText(requireContext(), "تمت إزالة متابعة الموضوع", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(),
+                    getString(R.string.unfollow_success), Toast.LENGTH_SHORT)
                     .show()
                 hideDialog()
 

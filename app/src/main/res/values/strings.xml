@@ -8,9 +8,9 @@
     <string name="joined_us_before">لديك حساب بالفعل</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="confirm_password">تأكيد كلمة المرور</string>
-    <string name="first_name">First Name</string>
-    <string name="second_name">Second Name</string>
-    <string name="family_name">Family Name</string>
+    <string name="first_name">الاسم الأول</string>
+    <string name="second_name">الاسم الثاني</string>
+    <string name="family_name">اسم العائلة</string>
     <string name="full_name">الاسم بالكامل</string>
     <string name="address">العنوان</string>
     <string name="phone">الهاتف</string>
@@ -41,4 +41,9 @@
     <string name="register_as_a_doctor">تسجيل حساب كطبيب</string>
     <string name="chat">المحادثة</string>
     <string name="message">الرسالة</string>
+    <string name="following">جار الإضافة لقائمة المتابعة..</string>
+    <string name="unfollowing">جار الإزالة من قائمة المتابعة..</string>
+    <string name="unfollow_success">تمت إزالة متابعة الموضوع</string>
+    <string name="follow_success">تمت إضافة الموضوع لقائمة المتابعة</string>
+    <string name="followers">متابعين</string>
 </resources>

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palliativecareapplication.R
 import com.example.palliativecareapplication.ui.MainActivity
 import com.example.palliativecareapplication.ui.TopicDetailsFragment
 import com.example.palliativecareapplication.databinding.CardTopicBinding
@@ -43,7 +44,7 @@ class TopicAdapter(var data: List<Topic>): RecyclerView.Adapter<TopicAdapter.MyV
         holder.cardViewBinding.apply {
             tvTitle.text = data[position].title
             tvDoctorName.text = data[position].doctorName
-            tvFollowersCount.text = "${data[position].usersFollowing} متابعين"
+            tvFollowersCount.text = "${data[position].usersFollowing} ${context.getString(R.string.followers)}"
             Picasso.get().load(data[position].image).into(imgTopic)
 
             if(!MainActivity.user.isDoctor){
@@ -103,7 +104,7 @@ class TopicAdapter(var data: List<Topic>): RecyclerView.Adapter<TopicAdapter.MyV
 
     fun search(text : String){
         val newArray = initialData.filter { topic ->
-            topic.title.contains(text) // || topic.doctorName.startsWith(text)
+            topic.title.contains(text, true) || topic.doctorName.contains(text, true)
         }
         data = newArray as ArrayList<Topic>
         notifyDataSetChanged()

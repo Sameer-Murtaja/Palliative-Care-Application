@@ -1,3 +1,3 @@
 package com.example.palliativecareapplication.model
 
-data class Message( val name: String, val message: String)
+data class Message( val name: String? = null, val message: String? = null)

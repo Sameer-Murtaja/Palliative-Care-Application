@@ -54,8 +54,7 @@
             android:id="@+id/text_input_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/card_background"
-            android:maxLength="20" />
+            android:background="@drawable/card_background"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

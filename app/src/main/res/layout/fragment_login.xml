@@ -52,7 +52,7 @@
             android:layout_marginTop="@dimen/spacing_large"
             android:autofillHints="username"
             android:drawableStart="@drawable/ic_user"
-            android:hint="@string/user_name"
+            android:hint="@string/email"
             android:inputType="textWebEmailAddress"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
@@ -67,6 +67,7 @@
                 android:id="@+id/text_input_edit_username"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:inputType="textWebEmailAddress"
                 android:background="@drawable/card_background"
                 android:maxLength="20" />
 

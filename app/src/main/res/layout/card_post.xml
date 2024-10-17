@@ -32,11 +32,15 @@
             <TextView
                 android:id="@+id/tv_title"
                 style="@style/TextStyle.Title.Large"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_normal"
+                android:ellipsize="end"
+                android:lines="1"
                 android:text="Title"
+                app:layout_constraintEnd_toStartOf="@+id/btnComments"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,13 +48,13 @@
                 android:id="@+id/tv_details"
                 style="@style/TextStyle.Body"
                 android:layout_width="0dp"
+                android:minLines="5"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_small"
-                android:layout_marginEnd="80dp"
 
-                android:paddingBottom="10dp"
-                android:text="doctor_name"
+                android:text="Details"
                 app:layout_constraintEnd_toStartOf="@+id/btnComments"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title" />
@@ -60,11 +64,11 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/btn_add"
-                android:visibility="visible"
-                app:layout_constraintEnd_toStartOf="@+id/btnComments"
-                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnComments"
                 app:srcCompat="@drawable/ic_delete" />
 
             <ImageButton
@@ -87,7 +91,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_details" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_details"
+                tools:itemCount="5"
+                tools:listitem="@layout/card_attachment_downloadable" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

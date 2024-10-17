@@ -46,7 +46,7 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        ViewPosts()
+        viewPosts()
 
         if(!MainActivity.user.isDoctor){
             binding.btnAdd.visibility = View.GONE
@@ -82,7 +82,7 @@ class ViewPostsFragment(var topic: Topic) : Fragment() {
 
     }
 
-    private fun ViewPosts() {
+    private fun viewPosts() {
         showDialog("Loading posts");
         val postsArr = ArrayList<Post>()
         db.collection(FirebaseNames.COLLECTION_TOPICS).document(topic.id)

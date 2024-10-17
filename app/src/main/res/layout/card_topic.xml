@@ -35,11 +35,15 @@
             <TextView
                 android:id="@+id/tv_title"
                 style="@style/TextStyle.Title.Large"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_normal"
+                android:ellipsize="end"
+                android:lines="1"
                 android:text="Title"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_topic"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -71,9 +75,11 @@
 
             <ImageView
                 android:id="@+id/img_topic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
                 android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />

@@ -25,7 +25,7 @@ import com.google.firebase.ktx.Firebase
 import org.json.JSONObject
 
 
-class ChatFragment(val chatName : String) : Fragment() {
+class ChatFragment(private val chatName: String) : Fragment() {
     lateinit var binding: FragmentChatBinding
     val database = Firebase.database
     val myRef = database.getReference("chat")
@@ -46,7 +46,6 @@ class ChatFragment(val chatName : String) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         messageList = ArrayList()
-
         binding.btnSend.setOnClickListener {
             var messageInput = binding.textInputMessage.text.toString()
             if (messageInput.isNotEmpty()) {
@@ -67,25 +66,41 @@ class ChatFragment(val chatName : String) : Fragment() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    val messageMapper = MassageMapper()
-                    snapshot.value.let {
-                        if(it == null || it.toString().isBlank()){
-                            return
-                        }
-                        Log.e("bk", "json: $it", )
-                        val messages = messageMapper.map(it.toString())
-                        count = messages.size
-                        setupAdapter(messages.toList())
-                        //chatAdapter.addData(messages.toList())
-                        Log.e("bk", "onDataChange: ${messages.toList()}", )
+                    if (!snapshot.exists()) {
+                        Log.e("bk", "No data found")
+                        return
                     }
+
+                    val messages = mutableListOf<Message>()
+                    for (messageSnapshot in snapshot.children) {
+                        val message = messageSnapshot.getValue(Message::class.java)
+                        message?.let { messages.add(it) }
+                    }
+
+                    count = messages.size
+                    setupAdapter(messages)
+                    Log.e("bk", "onDataChange: $messages")
+
+
+                    //old code
+//                    val messageMapper = MassageMapper()
+//                    snapshot.value.let {
+//                        if (it == null || it.toString().isBlank()) {
+//                            return
+//                        }
+//                        Log.e("bk", "json: $it")
+//                        val messages = messageMapper.map(it.toString())
+//                        count = messages.size
+//                        setupAdapter(messages.toList())
+//                        //chatAdapter.addData(messages.toList())
+//                        Log.e("bk", "onDataChange: ${messages.toList()}")
+//                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
                 }
             })
-
 
 
     }
@@ -97,15 +112,16 @@ class ChatFragment(val chatName : String) : Fragment() {
             this.navigateWithReplaceFragment(ViewTopicsFragment())
         }
     }
-    private  fun getRef() : DatabaseReference{
+
+    private fun getRef(): DatabaseReference {
         val x = chatName.split("/")
-        if (x.size > 1){
+        if (x.size > 1) {
             return myRef.child(x[0]).child(x[1])
         }
         return myRef.child(chatName)
     }
 
-    fun setupAdapter(messages: List<Message>){
+    fun setupAdapter(messages: List<Message>) {
         chatAdapter = ChatAdapter(messages)
         binding.rsView.layoutManager = LinearLayoutManager(requireContext())
         binding.rsView.adapter = chatAdapter

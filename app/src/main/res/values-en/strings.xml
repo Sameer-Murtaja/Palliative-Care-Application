@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">Caring Comfort</string>
+    <string name="login">login</string>
+    <string name="sign_up">Sign up</string>
+    <string name="have_no_account">Have no account</string>
+    <string name="password">Password</string>
+    <string name="user_name">User name</string>
+    <string name="joined_us_before">Joined us before</string>
+    <string name="email">Email</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="first_name">First Name</string>
+    <string name="second_name">Second Name</string>
+    <string name="family_name">Family Name</string>
+    <string name="full_name">Full name</string>
+    <string name="address">Address</string>
+    <string name="phone">Phone</string>
+    <string name="search">Search</string>
+    <string name="add_topic">Add topic</string>
+    <string name="add_post">Add post</string>
+    <string name="add_attachment">Add attachment</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="doctor_name">Doctor name</string>
+    <string name="topic_details">Topic details</string>
+    <string name="edit">Edit</string>
+    <string name="follow">Follow</string>
+    <string name="stop_follow">Stop following</string>
+    <string name="view_posts">View posts</string>
+    <string name="details">Details</string>
+    <string name="attachments_count">Attachments count: </string>
+
+    <string name="empty_form">Must not be empty</string>
+    <string name="invalid_username_password">The email or password is incorrect</string>
+    <string name="invalid_info">Make sure you filled all the fields</string>
+    <string name="invalid_confirm_password">The passwords are not matching</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_as_a_doctor">Login as a doctor</string>
+    <string name="register_as_a_doctor">Register as a doctor</string>
+    <string name="chat">Chat</string>
+    <string name="message">Message</string>
+
+    <string name="following">Following..</string>
+    <string name="unfollowing">Unfollowing..</string>
+    <string name="unfollow_success">Unfollow Success</string>
+    <string name="follow_success">Follow Success</string>
+    <string name="followers">followers</string>
+
+</resources>

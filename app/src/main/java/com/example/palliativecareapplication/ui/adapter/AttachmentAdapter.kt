@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.text.SpannableString
+import android.text.method.LinkMovementMethod
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.palliativecareapplication.databinding.CardAttachmentBinding
+import com.example.palliativecareapplication.databinding.CardAttachmentDownloadableBinding
+import com.example.palliativecareapplication.databinding.CardAttachmentImageBinding
+import com.example.palliativecareapplication.databinding.CardAttachmentVideoBinding
 import com.example.palliativecareapplication.databinding.FragmentViewPostsBinding
 import com.example.palliativecareapplication.model.Attachment
 import com.example.palliativecareapplication.model.Topic
@@ -32,58 +35,74 @@ class AttachmentAdapter(
     var data: List<Attachment>,
     var topic: Topic,
     var parentBinding: FragmentViewPostsBinding
-) : RecyclerView.Adapter<AttachmentAdapter.MyViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     lateinit var context: Context
     lateinit var db: FirebaseFirestore
 
     private var player: ExoPlayer? = null
     private var progressDialog: ProgressDialog? = null
 
+    companion object {
+        private const val TYPE_IMAGE = 1
+        private const val TYPE_VIDEO = 2
+        private const val TYPE_DOWNLOADABLE = 3
+    }
 
-    class MyViewHolder(val cardViewBinding: CardAttachmentBinding) :
+    class ImageViewHolder(val cardViewBinding: CardAttachmentImageBinding) :
         RecyclerView.ViewHolder(cardViewBinding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    class VideoViewHolder(val cardViewBinding: CardAttachmentVideoBinding) :
+        RecyclerView.ViewHolder(cardViewBinding.root)
+
+    class DownloadableViewHolder(val cardViewBinding: CardAttachmentDownloadableBinding) :
+        RecyclerView.ViewHolder(cardViewBinding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
         db = Firebase.firestore
 
-        val binding: CardAttachmentBinding =
-            CardAttachmentBinding.inflate(LayoutInflater.from(context), parent, false)
-        return MyViewHolder(binding)
+        if (viewType == TYPE_IMAGE) {
+            val binding: CardAttachmentImageBinding =
+                CardAttachmentImageBinding.inflate(LayoutInflater.from(context), parent, false)
+            return ImageViewHolder(binding)
+        } else if (viewType == TYPE_VIDEO) {
+            val binding: CardAttachmentVideoBinding =
+                CardAttachmentVideoBinding.inflate(LayoutInflater.from(context), parent, false)
+            return VideoViewHolder(binding)
+        } else {
+            val binding: CardAttachmentDownloadableBinding =
+                CardAttachmentDownloadableBinding.inflate(
+                    LayoutInflater.from(context),
+                    parent,
+                    false
+                )
+            return DownloadableViewHolder(binding)
+        }
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val attachment = data[position]
-        holder.cardViewBinding.apply {
-            if (attachment.isImage()) {
-                tvAttachment.visibility = View.GONE
-                playerView.visibility = View.GONE
-                Picasso.get().load(attachment.uri).into(imgAttachment)
-
-                imgAttachment.setOnClickListener {
-                    parentBinding.fullscreenLayout.visibility = View.VISIBLE
-                    parentBinding.fullscreenVideo.visibility = View.GONE
-                    parentBinding.fullscreenImg.visibility = View.VISIBLE
-                    Picasso.get().load(attachment.uri).into(parentBinding.fullscreenImg)
-                }
-
-            } else if (attachment.isVideo()) {
-                tvAttachment.visibility = View.GONE
-                imgAttachment.visibility = View.GONE
-                initializePlayer(attachment.uri)
-                playerView.player = player
-
-                playerView.setOnClickListener {
-                    parentBinding.fullscreenLayout.visibility = View.VISIBLE
-                    parentBinding.fullscreenVideo.visibility = View.VISIBLE
-                    parentBinding.fullscreenImg.visibility = View.GONE
-                    parentBinding.fullscreenVideo.player = player
-                }
-
-
-            } else {
-                handleOtherAttachmentUI(attachment)
+        if (holder is ImageViewHolder) {
+            Picasso.get().load(attachment.uri).into(holder.cardViewBinding.imgAttachment)
+            holder.cardViewBinding.imgAttachment.setOnClickListener {
+                parentBinding.fullscreenLayout.visibility = View.VISIBLE
+                parentBinding.fullscreenVideo.visibility = View.GONE
+                parentBinding.fullscreenImg.visibility = View.VISIBLE
+                Picasso.get().load(attachment.uri).into(parentBinding.fullscreenImg)
             }
+        } else if (holder is VideoViewHolder) {
+            initializePlayer(attachment.uri)
+            holder.cardViewBinding.playerView.player = player
+            holder.cardViewBinding.playerView.setOnClickListener {
+                parentBinding.fullscreenLayout.visibility = View.VISIBLE
+                parentBinding.fullscreenVideo.visibility = View.VISIBLE
+                parentBinding.fullscreenImg.visibility = View.GONE
+                parentBinding.fullscreenVideo.player = player
+            }
+
+
+        } else if(holder is DownloadableViewHolder) {
+            holder.cardViewBinding.handleOtherAttachmentUI(attachment)
         }
     }
 
@@ -91,6 +110,18 @@ class AttachmentAdapter(
     override fun getItemCount(): Int {
         return data.size
     }
+
+
+    override fun getItemViewType(position: Int): Int {
+        return if(data[position].isImage()){
+            TYPE_IMAGE
+        }else if(data[position].isVideo()){
+            TYPE_VIDEO
+        }else{
+            TYPE_DOWNLOADABLE
+        }
+    }
+
 
 
     private fun initializePlayer(uri: Uri) {
@@ -119,26 +150,25 @@ class AttachmentAdapter(
     }
 
 
-    private fun CardAttachmentBinding.handleOtherAttachmentUI(
+    private fun CardAttachmentDownloadableBinding.handleOtherAttachmentUI(
         attachment: Attachment
     ) {
-        playerView.visibility = View.GONE
-        imgAttachment.visibility = View.GONE
-
         setUnderlinedAttachmentName(attachment)
 
         downloadAttachmentOnClick(attachment)
     }
 
-    private fun CardAttachmentBinding.setUnderlinedAttachmentName(
+    private fun CardAttachmentDownloadableBinding.setUnderlinedAttachmentName(
         attachment: Attachment
     ) {
         val mSpannableString = SpannableString(attachment.name)
         mSpannableString.setSpan(UnderlineSpan(), 0, mSpannableString.length, 0)
         tvAttachment.text = mSpannableString
+        tvAttachment.movementMethod = LinkMovementMethod.getInstance()
+
     }
 
-    private fun CardAttachmentBinding.downloadAttachmentOnClick(
+    private fun CardAttachmentDownloadableBinding.downloadAttachmentOnClick(
         attachment: Attachment
     ) {
         tvAttachment.setOnClickListener {
