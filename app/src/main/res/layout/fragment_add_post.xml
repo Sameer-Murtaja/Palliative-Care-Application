@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/color_background"
+
+    tools:context=".ui.AddPostFragment">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/top_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
+        android:background="@color/color_background"
+        app:elevation="@dimen/zero"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_left_arrow"
+            app:navigationIconTint="@color/color_text_primary"
+            app:title="@string/add_post"
+            app:titleTextAppearance="@style/TextStyle.Title.Large"
+            app:titleTextColor="@color/color_text_primary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_title"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:autofillHints="username"
+        android:drawableStart="@drawable/ic_user"
+        android:hint="@string/title"
+        android:inputType="text"
+        android:textColorHint="@color/color_text_tertiary"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:helperTextTextColor="@color/color_warning"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_app_bar">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_background"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_description"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:autofillHints="username"
+        android:drawableStart="@drawable/ic_user"
+        android:hint="@string/details"
+        android:inputType="text"
+        android:textColorHint="@color/color_text_tertiary"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:helperTextTextColor="@color/color_warning"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_background" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_add_attachments"
+        android:layout_width="200dp"
+        android:layout_height="@dimen/height_input"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/add_attachment"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_description" />
+
+    <TextView
+        android:id="@+id/tv_attachments_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/attachments_count"
+        android:textColor="@color/color_text_secondary"
+        android:textSize="@dimen/font_size_caption"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_add_attachments"
+        app:layout_constraintEnd_toStartOf="@+id/button_add_attachments"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_add_post"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_input"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/add_post"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_add_attachments" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

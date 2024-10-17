@@ -1,9 +1,49 @@
 <resources>
-    <string name="app_name">Palliative Care Application</string>
-    <string name="login">Login</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="have_no_account">Have No Account</string>
-    <string name="password">Password</string>
-    <string name="user_name">Username</string>
-    <string name="joined_us_before">Joined Us Before</string>
+    <string name="app_name">Caring Comfort</string>
+    <string name="login">تسجيل دخول</string>
+    <string name="sign_up">تسجيل حساب</string>
+    <string name="have_no_account">ليس لديك حساب</string>
+    <string name="password">كلمة المرور</string>
+    <string name="user_name">اسم المستخدم</string>
+    <string name="joined_us_before">لديك حساب بالفعل</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="first_name">الاسم الأول</string>
+    <string name="second_name">الاسم الثاني</string>
+    <string name="family_name">اسم العائلة</string>
+    <string name="full_name">الاسم بالكامل</string>
+    <string name="address">العنوان</string>
+    <string name="phone">الهاتف</string>
+    <string name="search">بحث</string>
+    <string name="add_topic">إضافة موضوع</string>
+    <string name="add_post">إضافة منشور</string>
+    <string name="add_attachment">إضافة ملحقات</string>
+    <string name="title">العنوان</string>
+    <string name="description">الوصف</string>
+    <string name="doctor_name">اسم الدكتور</string>
+    <string name="topic_details">تفاصيل الموضوع</string>
+    <string name="edit">تعديل</string>
+    <string name="follow">متابعة</string>
+    <string name="stop_follow">إلغاء المتابعة</string>
+    <string name="view_posts">المنشورات</string>
+    <string name="details">التفاصيل</string>
+    <string name="attachments_count">عدد الملحقات: </string>
+
+    <string name="empty_form">يجب ألا يكون فارغ</string>
+    <string name="invalid_username_password">خطأ في البريد الإلكتروني أو كلمة المرور</string>
+    <string name="invalid_info">تأكد من ملأ جميع المدخلات</string>
+    <string name="invalid_confirm_password">تأكد من إدخال نفس كلمة المرور</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_as_a_doctor">تسجيل الدخول كطبيب</string>
+    <string name="register_as_a_doctor">تسجيل حساب كطبيب</string>
+    <string name="chat">المحادثة</string>
+    <string name="message">الرسالة</string>
+    <string name="following">جار الإضافة لقائمة المتابعة..</string>
+    <string name="unfollowing">جار الإزالة من قائمة المتابعة..</string>
+    <string name="unfollow_success">تمت إزالة متابعة الموضوع</string>
+    <string name="follow_success">تمت إضافة الموضوع لقائمة المتابعة</string>
+    <string name="followers">متابعين</string>
 </resources>
